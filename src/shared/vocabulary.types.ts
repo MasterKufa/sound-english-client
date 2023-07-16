@@ -26,8 +26,3 @@ export enum Lang {
   en = "en",
   ru = "ru",
 }
-
-export enum Paths {
-  vocabulary = "/vocabulary",
-  settings = "/settings",
-}

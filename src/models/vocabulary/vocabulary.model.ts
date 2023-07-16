@@ -1,4 +1,4 @@
-import { DeleteWordPayload, NewWord, Word } from "shared/types";
+import { DeleteWordPayload, NewWord, Word } from "shared/vocabulary.types";
 import { createEvent, createStore, sample } from "effector";
 import { vocabularyApi } from "api";
 import { AppGate } from "models/app.model";

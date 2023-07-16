@@ -1,7 +1,7 @@
 import { useUnit } from "effector-react";
 import { vocabularyModel } from "../../models";
 import { Box, IconButton, TextField } from "@mui/material";
-import { Word as WordType } from "shared/types";
+import { Word as WordType } from "shared/vocabulary.types";
 import { Container } from "./word.styles";
 import DeleteIcon from "@mui/icons-material/Delete";
 

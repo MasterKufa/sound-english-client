@@ -1,6 +1,6 @@
 import { createEffect } from "effector";
 import { socket } from "@master_kufa/client-tools";
-import { DeleteWordPayload, NewWord, Word } from "shared/types";
+import { DeleteWordPayload, NewWord, Word } from "shared/vocabulary.types";
 import { ACTIONS } from "./actions";
 
 export const loadWordsFx = createEffect<void, Array<Word>>(() =>

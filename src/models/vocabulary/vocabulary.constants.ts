@@ -1,4 +1,4 @@
-import { Lang, NewWord } from "shared/types";
+import { Lang, NewWord } from "shared/vocabulary.types";
 
 export const DEFAULT_WORD: NewWord = {
   sourceWord: {
