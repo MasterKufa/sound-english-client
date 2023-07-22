@@ -14,7 +14,3 @@ export const saveWordFx = createEffect<Word | NewWord, Word>((payload) =>
 export const deleteWordFx = createEffect<DeleteWordPayload, void>((payload) =>
   socket.emitWithAnswer<DeleteWordPayload, void>(ACTIONS.DELETE_WORD, payload)
 );
-
-export const loadAudioFx = createEffect<number, ArrayBuffer>((payload) =>
-  socket.emitWithAnswer<number, ArrayBuffer>(ACTIONS.LOAD_AUDIO, payload)
-);

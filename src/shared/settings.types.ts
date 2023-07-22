@@ -1,4 +1,4 @@
-export enum QueueMode {
+export enum QueueStrategy {
   sequence = "sequence",
   random = "random",
 }

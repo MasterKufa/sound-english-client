@@ -4,6 +4,8 @@ import { vocabularyApi } from "api";
 import { AppGate } from "models/app.model";
 import { ChangeTextPayload } from "./vocabulary.types";
 import { DEFAULT_WORD } from "./vocabulary.constants";
+import { createGate } from "effector-react";
+import { changeWordText, updateWord } from "./vocabulary.helpers";
 
 export const $words = createStore<Array<Word>>([]);
 
@@ -11,6 +13,8 @@ export const addWord = createEvent();
 export const wordTextChanged = createEvent<ChangeTextPayload>();
 export const saveWord = createEvent<Word | NewWord>();
 export const deleteWordClicked = createEvent<DeleteWordPayload>();
+
+export const VocabularyGate = createGate();
 
 sample({
   clock: AppGate.open,
@@ -33,25 +37,9 @@ sample({
   target: saveWord,
 });
 
-$words.on(vocabularyApi.saveWordFx.doneData, (words, updatedWord) => {
-  const wordInx = words.findIndex((word) => word.id === updatedWord.id);
+$words.on(vocabularyApi.saveWordFx.doneData, updateWord);
 
-  if (wordInx !== -1) {
-    const newWords = [...words];
-    newWords[wordInx] = updatedWord;
-    return newWords;
-  }
-
-  return [updatedWord, ...words];
-});
-
-$words.on(wordTextChanged, (words, { wordId, text, targetKey }) =>
-  words.map((word) =>
-    wordId === word.id
-      ? { ...word, [targetKey]: { ...word[targetKey], text } }
-      : word
-  )
-);
+$words.on(wordTextChanged, changeWordText);
 
 sample({
   clock: deleteWordClicked,
