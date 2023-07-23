@@ -19,6 +19,6 @@ export const changeWordText = (
 ) =>
   words.map((word) =>
     wordId === word.id
-      ? { ...word, [targetKey]: { ...word[targetKey], text } }
+      ? { ...word, [targetKey]: { ...word[targetKey], text: text.trim() } }
       : word
   );

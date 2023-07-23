@@ -18,7 +18,7 @@ export const fetchPlayerWord = ([strategy, words, playerQueue]: [
       return;
     }
 
-    const audioBuffer = await playerApi.loadAudioFx(id);
+    const audioBuffer = await playerApi.loadAudioFx({ id });
 
     resolve({ id, audioBuffer });
   });
