@@ -11,13 +11,13 @@ type ReminderProps = {
 export const Reminder = ({ id }: ReminderProps) => {
   const reminder = useStoreMap(
     vocabularyModel.$words,
-    vocabularySelectors.findWordById(id),
+    vocabularySelectors.findWordById(id)
   );
 
   return (
     <Box sx={Container}>
-      <Typography variant="h5">{reminder?.sourceWord.text}</Typography>
-      <Typography variant="h5">{reminder?.targetWord.text}</Typography>
+      <Typography variant="h6">{reminder?.sourceWord.text} -</Typography>
+      <Typography variant="h6">{reminder?.targetWord.text}</Typography>
     </Box>
   );
 };

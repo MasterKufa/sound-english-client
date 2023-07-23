@@ -73,20 +73,25 @@ $playerQueue.on(fetchPlayerWordFx.doneData, (queue, next) =>
 split({
   clock: $playerQueue,
   source: combine(
+    $isPlaying,
     $playerQueue,
     settingsModel.$playerQueueSize,
-    (queue, queueSize) => [queue, queueSize] as const
+    (isPlaying, queue, queueSize) => [isPlaying, queue, queueSize] as const
   ),
-  match: ([queue, queueSize]) =>
-    queue.length === queueSize ? "play" : "fetch",
+  match: ([isPlaying, queue, queueSize]) => {
+    if (!isPlaying) return "stop";
+
+    return queue.length === queueSize ? "play" : "fetch";
+  },
   cases: {
     play: playWordFx,
     fetch: enqueuePlayerWord,
+    stop: createEvent<void>(),
   },
 });
 
 sample({
-  clock: playWordFx.done,
+  clock: [playWordFx.done, stopPlayingWordFx.done],
   source: [
     $lastPlayedReminders,
     settingsModel.$lastPlayedRemindersSize,
@@ -103,4 +108,6 @@ sample({
   target: $lastPlayedReminders,
 });
 
-$playerQueue.on(playWordFx.done, (queue) => queue.slice(1));
+$playerQueue.on([playWordFx.done, stopPlayingWordFx.done], (queue) =>
+  queue.slice(1)
+);

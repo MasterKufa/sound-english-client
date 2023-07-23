@@ -25,8 +25,9 @@ export const Player = () => {
         {isPlaying ? "Stop" : "Play"}
       </Button>
       <Stack>
-        {lastPlayedReminders.map((reminderId) => (
-          <Reminder key={reminderId} id={reminderId} />
+        <Typography variant="h4">Last played</Typography>
+        {lastPlayedReminders.map((reminderId, inx) => (
+          <Reminder key={inx} id={reminderId} />
         ))}
       </Stack>
     </Box>
