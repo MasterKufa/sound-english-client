@@ -1,5 +1,6 @@
 export enum Paths {
-  vocabulary = "/vocabulary",
-  settings = "/settings",
-  player = "/player",
+  root = "/sound-english-client",
+  vocabulary = "/sound-english-client/vocabulary",
+  settings = "/sound-english-client/settings",
+  player = "/sound-english-client/player",
 }

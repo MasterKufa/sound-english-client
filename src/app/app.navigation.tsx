@@ -26,8 +26,11 @@ export const AppNavigation = () => {
           <Routes>
             <Route path="/">
               <Route element={<Navigate replace to={Paths.player} />} index />
-              <Route path={Paths.player} element={<Player />} />
-              <Route path={Paths.vocabulary} element={<Vocabulary />} />
+              <Route path={Paths.root}>
+                <Route element={<Navigate replace to={Paths.player} />} index />
+                <Route path={Paths.player} element={<Player />} />
+                <Route path={Paths.vocabulary} element={<Vocabulary />} />
+              </Route>
             </Route>
           </Routes>
         </Paper>
