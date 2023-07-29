@@ -85,7 +85,8 @@ sample({
 sample({
   clock: $playerQueue,
   source: [$isPlaying, $playerQueue, settingsModel.$playerQueueSize] as const,
-  filter: ([_, queue, queueSize]) => queue.length !== queueSize,
+  filter: ([isPlaying, queue, queueSize]) =>
+    isPlaying && queue.length < queueSize,
   target: enqueuePlayerWord,
 });
 

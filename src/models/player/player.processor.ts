@@ -14,15 +14,25 @@ export const stopAudio = () => {
 };
 
 export const playAudio = (queue: Array<PlayerWord>) =>
-  new Promise<void>((resolve, reject) => {
+  new Promise<void>(async (resolve, reject) => {
     const buffer = first(queue)?.audioBuffer;
 
-    if (!buffer) return;
+    if (!buffer) {
+      reject();
+
+      return;
+    }
 
     const blob = new Blob([buffer], { type: "audio/wav" });
     audioTrack.src = window.URL.createObjectURL(blob);
 
-    audioTrack.play();
+    try {
+      await audioTrack.play();
+    } catch {
+      reject();
+
+      return;
+    }
 
     const onEnded = (e: Event) => {
       audioTrack.onended = null;
