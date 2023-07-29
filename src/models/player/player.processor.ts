@@ -7,10 +7,17 @@ const STOP_EVENT_TYPE = "STOP_EVENT_TYPE";
 
 const audioTrack = new Audio();
 
+const setMediaSession = (state: "paused" | "playing") => {
+  if (navigator?.mediaSession?.playbackState) {
+    navigator.mediaSession.playbackState = state;
+  }
+};
+
 export const stopAudio = () => {
+  audioTrack.title = "Playing is stopped";
+  setMediaSession("paused");
   audioTrack.pause();
   audioTrack.currentTime = 0;
-  audioTrack.title = "Playing is stopped";
   audioTrack.onended?.(new Event(STOP_EVENT_TYPE));
 };
 
@@ -32,6 +39,7 @@ export const playAudio = ([queue, words]: [Array<PlayerWord>, Array<Word>]) =>
       await audioTrack.play();
       const word = vocabularySelectors.findWordById(id)(words);
       audioTrack.title = `${word?.sourceWord.text} - ${word?.targetWord.text}`;
+      setMediaSession("playing");
     } catch {
       reject();
 

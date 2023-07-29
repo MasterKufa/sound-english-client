@@ -22,3 +22,5 @@ export const $repeatWordCount = createStore<number>(1);
 // repeatSourceDelay         Int    @default(0)
 // repeatTargetDelay         Int    @default(0)
 // queueStrategy             String @default("sequence")
+
+// playbackRate//toaddd
