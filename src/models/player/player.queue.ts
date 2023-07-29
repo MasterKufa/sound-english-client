@@ -2,10 +2,9 @@ import { first, last, random } from "lodash";
 import { PlayerWord } from "../../shared/player.types";
 import { QueueStrategy } from "../../shared/settings.types";
 import { Word } from "shared/vocabulary.types";
-import { vocabularySelectors } from "../vocabulary";
 
 const sequenceEnqueue = (words: Array<Word>, playerQueue: Array<PlayerWord>) =>
-  vocabularySelectors.findWordById(last(playerQueue)?.id)(words) ||
+  words[words.findIndex(({ id }) => id === last(playerQueue)?.id) + 1] ||
   first(words);
 
 const randomEnqueue = (words: Array<Word>) => words[random(0, words.length)];

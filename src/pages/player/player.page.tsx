@@ -1,9 +1,9 @@
 import { useGate, useUnit } from "effector-react";
 import { playerModel } from "../../models";
 import { Box, Button, Stack, Typography } from "@mui/material";
-import { Container } from "./player.styles";
 import { PLAYER_LABEL } from "./player.constants";
 import { Reminder } from "../../modules/reminder";
+import { ScreenContainer } from "../../shared/styles";
 
 export const Player = () => {
   const isPlaying = useUnit(playerModel.$isPlaying);
@@ -15,7 +15,7 @@ export const Player = () => {
   useGate(playerModel.PlayerGate);
 
   return (
-    <Box sx={Container}>
+    <Box sx={ScreenContainer}>
       <Typography variant="h4">{PLAYER_LABEL}</Typography>
       <Button
         variant="contained"

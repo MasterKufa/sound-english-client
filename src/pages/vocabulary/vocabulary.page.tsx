@@ -1,9 +1,9 @@
 import { useGate, useUnit } from "effector-react";
 import { vocabularyModel } from "../../models";
 import { Box, Button, Stack, Typography } from "@mui/material";
-import { Container } from "./vocabulary.styles";
 import { VOCABULARY_LABEL } from "./vocabulary.constants";
 import { Word } from "../../modules";
+import { ScreenContainer } from "../../shared/styles";
 
 export const Vocabulary = () => {
   const words = useUnit(vocabularyModel.$words);
@@ -12,7 +12,7 @@ export const Vocabulary = () => {
   useGate(vocabularyModel.VocabularyGate);
 
   return (
-    <Box sx={Container}>
+    <Box sx={ScreenContainer}>
       <Typography variant="h4">{VOCABULARY_LABEL}</Typography>
       <Button variant="contained" onClick={actions.addWord}>
         Add word

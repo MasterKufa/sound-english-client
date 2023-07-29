@@ -1,7 +1,8 @@
 import { SxProps } from "@mui/material";
+import { adjustAppHeight } from "@master_kufa/client-tools";
 
 export const Container: SxProps = {
-  minHeight: "100vh",
+  height: adjustAppHeight(),
   bgcolor: "grey.300",
   display: "flex",
   alignItems: "center",
@@ -9,5 +10,6 @@ export const Container: SxProps = {
 
 export const TabContainer: SxProps = {
   padding: 3,
-  width: 500,
+  width: "95vw",
+  maxWidth: "500px",
 };

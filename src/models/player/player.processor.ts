@@ -33,3 +33,18 @@ export const playAudio = (queue: Array<PlayerWord>) =>
 
     audioTrack.onended = onEnded;
   });
+
+const unblockSafari = () => {
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+  if (!isSafari) return;
+
+  const unBlocker = () => {
+    audioTrack.load();
+    window.removeEventListener("click", unBlocker);
+  };
+
+  window.addEventListener("click", unBlocker);
+};
+
+unblockSafari();

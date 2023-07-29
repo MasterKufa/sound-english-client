@@ -4,7 +4,7 @@ import { PLAYER_LABEL, Player, VOCABULARY_LABEL, Vocabulary } from "../pages";
 import { Box, Paper, Stack, Tab, Tabs } from "@mui/material";
 import { useGate } from "effector-react";
 import { appModel } from "../models";
-import { Container, TabContainer } from "./styles";
+import { Container, TabContainer } from "./app.styles";
 import { Paths } from "./app.types";
 
 export const AppNavigation = () => {
