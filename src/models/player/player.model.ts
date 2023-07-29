@@ -1,6 +1,5 @@
 import {
   attach,
-  combine,
   createEffect,
   createEvent,
   createStore,
@@ -70,40 +69,40 @@ $playerQueue.on(fetchPlayerWordFx.doneData, (queue, next) =>
   queue.concat([next])
 );
 
-split({
-  clock: $playerQueue,
-  source: combine(
+sample({
+  clock: [$playerQueue, playWordFx.done],
+  source: [
     $isPlaying,
     $playerQueue,
     settingsModel.$playerQueueSize,
-    (isPlaying, queue, queueSize) => [isPlaying, queue, queueSize] as const
-  ),
-  match: ([isPlaying, queue, queueSize]) => {
-    if (!isPlaying) return "stop";
-
-    return queue.length === queueSize ? "play" : "fetch";
-  },
-  cases: {
-    play: playWordFx,
-    fetch: enqueuePlayerWord,
-    stop: createEvent<void>(),
-  },
+    playWordFx.inFlight,
+  ] as const,
+  filter: ([isPlaying, queue, _, inFlight]) =>
+    Boolean(isPlaying && !inFlight && queue.length),
+  target: playWordFx,
 });
 
 sample({
-  clock: [playWordFx.done, stopPlayingWordFx.done],
+  clock: $playerQueue,
+  source: [$isPlaying, $playerQueue, settingsModel.$playerQueueSize] as const,
+  filter: ([_, queue, queueSize]) => queue.length !== queueSize,
+  target: enqueuePlayerWord,
+});
+
+sample({
+  clock: [playWordFx, stopPlayingWordFx],
   source: [
     $lastPlayedReminders,
     settingsModel.$lastPlayedRemindersSize,
     $playerQueue,
   ] as const,
   fn: ([reminders, remindersSize, queue]) => {
-    const playedId = first(queue)?.id;
-    if (!playedId) return reminders;
+    const playingId = first(queue)?.id;
+    if (!playingId) return reminders;
 
     return reminders.length === remindersSize
-      ? reminders.slice(1).concat([playedId])
-      : reminders.concat([playedId]);
+      ? reminders.slice(1).concat([playingId])
+      : reminders.concat([playingId]);
   },
   target: $lastPlayedReminders,
 });
