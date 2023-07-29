@@ -8,8 +8,14 @@ export const Container: SxProps = {
   alignItems: "center",
 };
 
+export const NavigationContainer: SxProps = {
+  height: "100%",
+};
+
 export const TabContainer: SxProps = {
   padding: 3,
   width: "95vw",
   maxWidth: "500px",
+  maxHeight: "calc(100% - 60px)",
+  overflow: "auto",
 };

@@ -4,7 +4,7 @@ import { PLAYER_LABEL, Player, VOCABULARY_LABEL, Vocabulary } from "../pages";
 import { Box, Paper, Stack, Tab, Tabs } from "@mui/material";
 import { useGate } from "effector-react";
 import { appModel } from "../models";
-import { Container, TabContainer } from "./app.styles";
+import { Container, NavigationContainer, TabContainer } from "./app.styles";
 import { Paths } from "./app.types";
 
 export const AppNavigation = () => {
@@ -13,7 +13,7 @@ export const AppNavigation = () => {
 
   return (
     <Stack sx={Container}>
-      <Box>
+      <Box sx={NavigationContainer}>
         <Tabs
           value={navigation.location.pathname}
           onChange={(_, value) => navigation.navigate(value)}

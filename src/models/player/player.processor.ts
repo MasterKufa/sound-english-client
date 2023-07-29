@@ -1,5 +1,7 @@
 import { first } from "lodash";
 import { PlayerWord } from "shared/player.types";
+import { Word } from "../../shared/vocabulary.types";
+import { vocabularySelectors } from "../vocabulary";
 
 const STOP_EVENT_TYPE = "STOP_EVENT_TYPE";
 
@@ -8,26 +10,28 @@ const audioTrack = new Audio();
 export const stopAudio = () => {
   audioTrack.pause();
   audioTrack.currentTime = 0;
-  URL.revokeObjectURL(audioTrack.src);
-  audioTrack.src = "";
+  audioTrack.title = "Playing is stopped";
   audioTrack.onended?.(new Event(STOP_EVENT_TYPE));
 };
 
-export const playAudio = (queue: Array<PlayerWord>) =>
+export const playAudio = ([queue, words]: [Array<PlayerWord>, Array<Word>]) =>
   new Promise<void>(async (resolve, reject) => {
-    const buffer = first(queue)?.audioBuffer;
+    const playerWord = first(queue);
 
-    if (!buffer) {
+    if (!playerWord) {
       reject();
 
       return;
     }
-
-    const blob = new Blob([buffer], { type: "audio/wav" });
+    const { audioBuffer, id } = playerWord;
+    const blob = new Blob([audioBuffer], { type: "audio/wav" });
+    URL.revokeObjectURL(audioTrack.src);
     audioTrack.src = window.URL.createObjectURL(blob);
 
     try {
       await audioTrack.play();
+      const word = vocabularySelectors.findWordById(id)(words);
+      audioTrack.title = `${word?.sourceWord.text} - ${word?.targetWord.text}`;
     } catch {
       reject();
 
@@ -43,6 +47,11 @@ export const playAudio = (queue: Array<PlayerWord>) =>
 
     audioTrack.onended = onEnded;
   });
+
+export const handleAudioControls = (triggerPlay: () => void) => {
+  navigator.mediaSession.setActionHandler("play", triggerPlay);
+  navigator.mediaSession.setActionHandler("pause", triggerPlay);
+};
 
 const unblockSafari = () => {
   const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);

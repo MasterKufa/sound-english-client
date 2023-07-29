@@ -27,7 +27,7 @@ export const Player = () => {
       <Stack>
         <Typography variant="h4">Last played</Typography>
         {lastPlayedReminders.map((reminderId, inx) => (
-          <Reminder key={inx} id={reminderId} />
+          <Reminder key={`${inx}_${reminderId}`} id={reminderId} />
         ))}
       </Stack>
     </Box>
