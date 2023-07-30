@@ -119,12 +119,18 @@ $playerQueue.on([playWordFx.done, stopPlayingWordFx.done], (queue) =>
   queue.slice(1)
 );
 
-// stop playing on leave to avoid side effects of changing settings and words
+// stop playing on leave and drop queue to avoid side effects of changing settings and words
 sample({
   clock: PlayerGate.status,
   source: $isPlaying,
   filter: (isPlaying, isOpened) => isPlaying && !isOpened,
-  target: [triggerPlay, leavePlayerNoticeFx],
+  fn: () => [],
+  target: [
+    triggerPlay,
+    leavePlayerNoticeFx,
+    $playerQueue,
+    $lastPlayedReminders,
+  ],
 });
 
 handleAudioControls(triggerPlay);
