@@ -35,7 +35,9 @@ export const Select = <T extends string, V extends string | number>({
       }
     >
       {options.map((option) => (
-        <MenuItem value={option.value}>{option.label}</MenuItem>
+        <MenuItem key={option.value} value={option.value}>
+          {option.label}
+        </MenuItem>
       ))}
     </SelectMUI>
     <FormHelperText>{helperText}</FormHelperText>
