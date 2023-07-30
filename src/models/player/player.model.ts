@@ -16,6 +16,7 @@ import { first } from "lodash";
 import { fetchPlayerWord } from "./player.helpers";
 import { Notification } from "@master_kufa/client-tools";
 import { Word } from "../../shared/vocabulary.types";
+import { Settings } from "../../shared/settings.types";
 
 export const $isPlaying = createStore<boolean>(false);
 export const $playerQueue = createStore<Array<PlayerWord>>([]);
@@ -31,8 +32,10 @@ export const triggerPlay = createEvent();
 export const enqueuePlayerWord = createEvent();
 
 const playWordFx = attach({
-  effect: createEffect<[Array<PlayerWord>, Array<Word>], void>(playAudio),
-  source: [$playerQueue, vocabularyModel.$words],
+  effect: createEffect<[Array<PlayerWord>, Array<Word>, Settings], void>(
+    playAudio
+  ),
+  source: [$playerQueue, vocabularyModel.$words, settingsModel.$settings],
 });
 
 const stopPlayingWordFx = createEffect(stopAudio);
@@ -77,7 +80,8 @@ sample({
 //apply enqueue new word and repeatWordCount
 sample({
   clock: fetchPlayerWordFx.doneData,
-  source: [$playerQueue, settingsModel.$settings] as const,
+  source: [$playerQueue, settingsModel.$settings, PlayerGate.status] as const,
+  filter: ([_, _1, isOpen]) => isOpen,
   fn: ([queue, settings], next) =>
     queue.concat(Array(settings.repeatWordCount).fill(next)),
   target: $playerQueue,
@@ -120,9 +124,13 @@ sample({
   target: $lastPlayedReminders,
 });
 
-$playerQueue.on([playWordFx.done, stopPlayingWordFx.done], (queue) =>
-  queue.slice(1)
-);
+sample({
+  clock: [playWordFx.done, stopPlayingWordFx.done],
+  source: [$playerQueue, PlayerGate.status] as const,
+  filter: ([_, isOpen]) => isOpen,
+  fn: ([queue]) => queue.slice(1),
+  target: $playerQueue,
+});
 
 // stop playing on leave and drop queue to avoid side effects of changing settings and words
 sample({
@@ -131,9 +139,9 @@ sample({
   filter: (isPlaying, isOpened) => isPlaying && !isOpened,
   fn: () => [],
   target: [
+    $playerQueue,
     triggerPlay,
     leavePlayerNoticeFx,
-    $playerQueue,
     $lastPlayedReminders,
   ],
 });

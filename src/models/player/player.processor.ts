@@ -2,6 +2,7 @@ import { first } from "lodash";
 import { PlayerWord } from "shared/player.types";
 import { Word } from "../../shared/vocabulary.types";
 import { vocabularySelectors } from "../vocabulary";
+import { Settings } from "../../shared/settings.types";
 
 const STOP_EVENT_TYPE = "STOP_EVENT_TYPE";
 
@@ -21,7 +22,11 @@ export const stopAudio = () => {
   audioTrack.onended?.(new Event(STOP_EVENT_TYPE));
 };
 
-export const playAudio = ([queue, words]: [Array<PlayerWord>, Array<Word>]) =>
+export const playAudio = ([queue, words, { delayPlayerWordToWord }]: [
+  Array<PlayerWord>,
+  Array<Word>,
+  Settings
+]) =>
   new Promise<void>(async (resolve, reject) => {
     const playerWord = first(queue);
 
@@ -46,11 +51,19 @@ export const playAudio = ([queue, words]: [Array<PlayerWord>, Array<Word>]) =>
       return;
     }
 
+    let delayTimer: NodeJS.Timer;
     const onEnded = (e: Event) => {
-      audioTrack.onended = null;
+      clearTimeout(delayTimer);
 
-      if (e.type === STOP_EVENT_TYPE) reject();
-      else resolve();
+      if (e.type === STOP_EVENT_TYPE) {
+        reject();
+        return;
+      }
+
+      delayTimer = setTimeout(() => {
+        audioTrack.onended = null;
+        resolve();
+      }, delayPlayerWordToWord);
     };
 
     audioTrack.onended = onEnded;

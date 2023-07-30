@@ -22,15 +22,15 @@ export const settingsConstraints: Partial<
     max: 30000,
   },
   repeatSourceCount: {
-    min: 0,
+    min: 1,
     max: 5,
   },
   repeatTargetCount: {
-    min: 0,
+    min: 1,
     max: 5,
   },
   repeatWordCount: {
-    min: 0,
+    min: 1,
     max: 5,
   },
   repeatSourceDelay: {
