@@ -1,3 +1,5 @@
+import { Lang } from "./settings.types";
+
 export type Word = {
   createdAt: string;
   sourceWord: WordUnit;
@@ -21,8 +23,3 @@ export type NewWordUnit = Omit<WordUnit, "id">;
 export type DeleteWordPayload = {
   id: number;
 };
-
-export enum Lang {
-  en = "en",
-  ru = "ru",
-}

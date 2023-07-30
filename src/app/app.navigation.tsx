@@ -1,6 +1,12 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { navigation, useInitNavigation } from "../shared/navigate";
-import { PLAYER_LABEL, Player, VOCABULARY_LABEL, Vocabulary } from "../pages";
+import {
+  PLAYER_LABEL,
+  Player,
+  Settings,
+  VOCABULARY_LABEL,
+  Vocabulary,
+} from "../pages";
 import { Box, Paper, Stack, Tab, Tabs } from "@mui/material";
 import { useGate } from "effector-react";
 import { appModel } from "../models";
@@ -30,6 +36,7 @@ export const AppNavigation = () => {
                 <Route element={<Navigate replace to={Paths.player} />} index />
                 <Route path={Paths.player} element={<Player />} />
                 <Route path={Paths.vocabulary} element={<Vocabulary />} />
+                <Route path={Paths.settings} element={<Settings />} />
               </Route>
             </Route>
           </Routes>

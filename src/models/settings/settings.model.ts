@@ -1,26 +1,85 @@
-import { createStore } from "effector";
-import { QueueStrategy } from "shared/settings.types";
+import { createEvent, createStore, sample } from "effector";
+import { createGate } from "effector-react";
+import { Lang, QueueStrategy, Settings, Voice } from "shared/settings.types";
+import { AppGate } from "../app.model";
+import { settingsApi } from "../../api";
+import { applySettingsConstraints } from "./settings.constraints";
+import { ChangeSettingsPayload } from "./settings.types";
 
-export const $queueStrategy = createStore<QueueStrategy>(
-  QueueStrategy.sequence
-);
+export const $settings = createStore<Settings>({
+  queueStrategy: QueueStrategy.sequence,
+  //min 2 to correct sequence enqueue
+  playerQueueSize: 2,
+  lastPlayedRemindersSize: 1,
+  delayPlayerSourceToTarget: 0,
+  delayPlayerWordToWord: 0,
+  sourceVoice: "",
+  targetVoice: "",
+  repeatSourceCount: 1,
+  repeatTargetCount: 1,
+  repeatWordCount: 1,
+  repeatSourceDelay: 0,
+  repeatTargetDelay: 0,
+});
 
-//min 2 to correct sequence enqueue
-export const $playerQueueSize = createStore<number>(2);
+export const $sourceVoices = createStore<Array<Voice>>([]);
+export const $targetVoices = createStore<Array<Voice>>([]);
 
-// test min number
-export const $lastPlayedRemindersSize = createStore<number>(1);
-export const $delayPlayerSourceToTarget = createStore<number>(0);
-export const $delayPlayerWordToWord = createStore<number>(0);
-export const $sourceVoice = createStore<string>("");
-export const $targetVoice = createStore<string>("");
-export const $repeatSourceCount = createStore<number>(1);
-export const $repeatTargetCount = createStore<number>(1);
-export const $repeatWordCount = createStore<number>(1);
+export const changeSettings = createEvent<ChangeSettingsPayload>();
 
-// repeatWordCount           Int    @default(1)
-// repeatSourceDelay         Int    @default(0)
-// repeatTargetDelay         Int    @default(0)
-// queueStrategy             String @default("sequence")
+export const SettingsGate = createGate();
 
-// playbackRate//toaddd
+// load settings
+sample({
+  clock: AppGate.open,
+  fn: () => ({ lang: Lang.en }),
+  target: settingsApi.loadSettingsFx,
+});
+
+sample({
+  source: settingsApi.loadSettingsFx.doneData,
+  target: $settings,
+});
+
+// load voices
+sample({
+  clock: AppGate.open,
+  fn: () => ({ lang: Lang.en }),
+  target: settingsApi.loadVoicesFx,
+});
+
+sample({
+  source: settingsApi.loadVoicesFx.done,
+  filter: ({ params }) => params.lang === Lang.en,
+  fn: ({ result }) => result,
+  target: $sourceVoices,
+});
+
+sample({
+  clock: AppGate.open,
+  fn: () => ({ lang: Lang.ru }),
+  target: settingsApi.loadVoicesFx,
+});
+
+sample({
+  source: settingsApi.loadVoicesFx.done,
+  filter: ({ params }) => params.lang === Lang.ru,
+  fn: ({ result }) => result,
+  target: $targetVoices,
+});
+
+// change settings
+$settings.on(changeSettings, (settings, payload) => ({
+  ...settings,
+  [payload.field]: payload.withConstraints
+    ? applySettingsConstraints(payload).value
+    : payload.value,
+}));
+
+// save on quit tab
+sample({
+  clock: SettingsGate.status,
+  source: $settings,
+  filter: (_, isOpen) => !isOpen,
+  target: settingsApi.changeSettingsFx,
+});

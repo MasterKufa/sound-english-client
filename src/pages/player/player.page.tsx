@@ -1,5 +1,5 @@
 import { useGate, useUnit } from "effector-react";
-import { playerModel } from "../../models";
+import { playerModel, settingsModel } from "../../models";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import { PLAYER_LABEL } from "./player.constants";
 import { Reminder } from "../../modules/reminder";
@@ -9,6 +9,7 @@ export const Player = () => {
   const isPlaying = useUnit(playerModel.$isPlaying);
   const isPlayingTriggerEnabled = useUnit(playerModel.$isPlayingTriggerEnabled);
   const lastPlayedReminders = useUnit(playerModel.$lastPlayedReminders);
+  const { lastPlayedRemindersSize } = useUnit(settingsModel.$settings);
 
   const actions = useUnit({ triggerPlay: playerModel.triggerPlay });
 
@@ -24,12 +25,14 @@ export const Player = () => {
       >
         {isPlaying ? "Stop" : "Play"}
       </Button>
-      <Stack>
-        <Typography variant="h4">Last played</Typography>
-        {lastPlayedReminders.map((reminderId, inx) => (
-          <Reminder key={`${inx}_${reminderId}`} id={reminderId} />
-        ))}
-      </Stack>
+      {Boolean(lastPlayedRemindersSize) && (
+        <Stack>
+          <Typography variant="h4">Last played</Typography>
+          {lastPlayedReminders.map((reminderId, inx) => (
+            <Reminder key={`${inx}_${reminderId}`} id={reminderId} />
+          ))}
+        </Stack>
+      )}
     </Box>
   );
 };

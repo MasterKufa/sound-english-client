@@ -63,13 +63,13 @@ split({
 sample({
   clock: enqueuePlayerWord,
   source: [
-    settingsModel.$queueStrategy,
+    settingsModel.$settings,
     vocabularyModel.$words,
     $playerQueue,
     $isPlayingTriggerEnabled,
   ] as const,
   filter: ([_, _1, _2, isPlayingTriggerEnabled]) => isPlayingTriggerEnabled,
-  fn: ([queueStrategy, words, playerQueue]) =>
+  fn: ([{ queueStrategy }, words, playerQueue]) =>
     [queueStrategy, words, playerQueue] as const,
   target: fetchPlayerWordFx,
 });
@@ -80,22 +80,17 @@ $playerQueue.on(fetchPlayerWordFx.doneData, (queue, next) =>
 
 sample({
   clock: [$playerQueue, playWordFx.done],
-  source: [
-    $isPlaying,
-    $playerQueue,
-    settingsModel.$playerQueueSize,
-    playWordFx.inFlight,
-  ] as const,
-  filter: ([isPlaying, queue, _, inFlight]) =>
+  source: [$isPlaying, $playerQueue, playWordFx.inFlight] as const,
+  filter: ([isPlaying, queue, inFlight]) =>
     Boolean(isPlaying && !inFlight && queue.length),
   target: playWordFx,
 });
 
 sample({
   clock: $playerQueue,
-  source: [$isPlaying, $playerQueue, settingsModel.$playerQueueSize] as const,
-  filter: ([isPlaying, queue, queueSize]) =>
-    isPlaying && queue.length < queueSize,
+  source: [$isPlaying, $playerQueue, settingsModel.$settings] as const,
+  filter: ([isPlaying, queue, { playerQueueSize }]) =>
+    isPlaying && queue.length < playerQueueSize,
   target: enqueuePlayerWord,
 });
 
@@ -104,16 +99,18 @@ sample({
   clock: [playWordFx, stopPlayingWordFx],
   source: [
     $lastPlayedReminders,
-    settingsModel.$lastPlayedRemindersSize,
+    settingsModel.$settings,
     $playerQueue,
   ] as const,
-  fn: ([reminders, remindersSize, queue]) => {
+  fn: ([reminders, { lastPlayedRemindersSize }, queue]) => {
     const playingId = first(queue)?.id;
     if (!playingId) return reminders;
 
-    return reminders.length === remindersSize
-      ? reminders.slice(1).concat([playingId])
-      : reminders.concat([playingId]);
+    return [playingId].concat(
+      reminders.length === lastPlayedRemindersSize
+        ? reminders.slice(1)
+        : reminders
+    );
   },
   target: $lastPlayedReminders,
 });
