@@ -74,9 +74,14 @@ sample({
   target: fetchPlayerWordFx,
 });
 
-$playerQueue.on(fetchPlayerWordFx.doneData, (queue, next) =>
-  queue.concat([next])
-);
+//apply enqueue new word and repeatWordCount
+sample({
+  clock: fetchPlayerWordFx.doneData,
+  source: [$playerQueue, settingsModel.$settings] as const,
+  fn: ([queue, settings], next) =>
+    queue.concat(Array(settings.repeatWordCount).fill(next)),
+  target: $playerQueue,
+});
 
 sample({
   clock: [$playerQueue, playWordFx.done],
@@ -96,7 +101,7 @@ sample({
 
 // add reminders and change queue after play
 sample({
-  clock: [playWordFx, stopPlayingWordFx],
+  clock: playWordFx,
   source: [
     $lastPlayedReminders,
     settingsModel.$settings,
@@ -104,11 +109,11 @@ sample({
   ] as const,
   fn: ([reminders, { lastPlayedRemindersSize }, queue]) => {
     const playingId = first(queue)?.id;
-    if (!playingId) return reminders;
+    if (!playingId || reminders[0] === playingId) return reminders;
 
     return [playingId].concat(
       reminders.length === lastPlayedRemindersSize
-        ? reminders.slice(1)
+        ? reminders.slice(0, lastPlayedRemindersSize - 1)
         : reminders
     );
   },

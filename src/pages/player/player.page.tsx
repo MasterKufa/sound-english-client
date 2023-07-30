@@ -4,6 +4,7 @@ import { Box, Button, Stack, Typography } from "@mui/material";
 import { PLAYER_LABEL } from "./player.constants";
 import { Reminder } from "../../modules/reminder";
 import { ScreenContainer } from "../../shared/styles";
+import { nanoid } from "nanoid";
 
 export const Player = () => {
   const isPlaying = useUnit(playerModel.$isPlaying);
@@ -30,7 +31,7 @@ export const Player = () => {
           <Typography variant="h4">Last played</Typography>
           {lastPlayedReminders.length ? (
             lastPlayedReminders.map((reminderId, inx) => (
-              <Reminder key={`${inx}_${reminderId}`} id={reminderId} />
+              <Reminder key={nanoid()} id={reminderId} />
             ))
           ) : (
             <Typography variant="body1">
