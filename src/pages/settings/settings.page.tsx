@@ -48,7 +48,7 @@ export const Settings = () => {
         />
         <Select
           {...buildProps("targetVoice")}
-          label="Source voice"
+          label="Target voice"
           helperText="Voice of translation language"
           options={buildVoiceOptions(targetVoices)}
         />

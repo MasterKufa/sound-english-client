@@ -83,3 +83,5 @@ sample({
   filter: (_, isOpen) => !isOpen,
   target: settingsApi.changeSettingsFx,
 });
+
+window.addEventListener("beforeunload", SettingsGate.close);
