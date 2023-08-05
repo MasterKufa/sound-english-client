@@ -1,18 +1,18 @@
-import { DeleteWordPayload, NewWord, Word } from "shared/vocabulary.types";
-import { createEvent, createStore, sample } from "effector";
-import { vocabularyApi } from "api";
+import { Word } from "shared/vocabulary.types";
+import { createEffect, createEvent, createStore, sample } from "effector";
+import { vocabularyApi, wordApi } from "api";
 import { AppGate } from "models/app.model";
-import { ChangeTextPayload } from "./vocabulary.types";
-import { DEFAULT_WORD } from "./vocabulary.constants";
 import { createGate } from "effector-react";
-import { changeWordText, updateWord } from "./vocabulary.helpers";
+import { Confirm, Notification } from "@master_kufa/client-tools";
+import { updateWord } from "./vocabulary.helpers";
+import {
+  CONFIRM_DELETE_TEXT,
+  CONFIRM_DELETE_TITLE,
+} from "./vocabulary.constants";
 
 export const $words = createStore<Array<Word>>([]);
 
-export const addWord = createEvent();
-export const wordTextChanged = createEvent<ChangeTextPayload>();
-export const saveWord = createEvent<Word | NewWord>();
-export const deleteWordClicked = createEvent<DeleteWordPayload>();
+export const deleteWordClicked = createEvent<number>();
 
 export const VocabularyGate = createGate();
 
@@ -26,26 +26,28 @@ sample({
   target: $words,
 });
 
-sample({
-  clock: saveWord,
-  target: vocabularyApi.saveWordFx,
-});
-
-sample({
-  clock: addWord,
-  fn: () => DEFAULT_WORD,
-  target: saveWord,
-});
-
-$words.on(vocabularyApi.saveWordFx.doneData, updateWord);
-
-$words.on(wordTextChanged, changeWordText);
+$words.on(wordApi.saveWordFx.doneData, updateWord);
 
 sample({
   clock: deleteWordClicked,
-  target: vocabularyApi.deleteWordFx,
+  target: createEffect<number, void>((payload) => {
+    Confirm.show({
+      title: CONFIRM_DELETE_TITLE,
+      text: CONFIRM_DELETE_TEXT,
+      onSubmit: () => vocabularyApi.deleteWordFx(payload),
+    });
+  }),
 });
 
 $words.on(vocabularyApi.deleteWordFx.done, (words, { params }) =>
-  words.filter((word) => word.id !== params.id)
+  words.filter((word) => word.id !== params)
 );
+
+sample({
+  clock: vocabularyApi.deleteWordFx.done,
+  fn: (): Notification.PayloadType => ({
+    type: "success",
+    message: "Word successfully deleted",
+  }),
+  target: Notification.add,
+});

@@ -19,7 +19,3 @@ export type WordUnit = {
 };
 
 export type NewWordUnit = Omit<WordUnit, "id">;
-
-export type DeleteWordPayload = {
-  id: number;
-};

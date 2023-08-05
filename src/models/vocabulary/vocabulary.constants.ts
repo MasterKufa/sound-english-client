@@ -1,13 +1,2 @@
-import { NewWord } from "shared/vocabulary.types";
-import { Lang } from "../../shared/settings.types";
-
-export const DEFAULT_WORD: NewWord = {
-  sourceWord: {
-    lang: Lang.en,
-    text: "",
-  },
-  targetWord: {
-    lang: Lang.ru,
-    text: "",
-  },
-};
+export const CONFIRM_DELETE_TITLE = "Confirm delete";
+export const CONFIRM_DELETE_TEXT = "Are you sure you want to delete this word?";

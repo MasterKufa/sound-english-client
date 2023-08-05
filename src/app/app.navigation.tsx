@@ -6,12 +6,15 @@ import {
   Settings,
   VOCABULARY_LABEL,
   Vocabulary,
+  SETTINGS_LABEL,
 } from "../pages";
 import { Box, Paper, Stack, Tab, Tabs } from "@mui/material";
 import { useGate } from "effector-react";
 import { appModel } from "../models";
 import { Container, NavigationContainer, TabContainer } from "./app.styles";
 import { Paths } from "./app.types";
+import { Word } from "../pages/word";
+import { buildTabsValue } from "./app.helpers";
 
 export const AppNavigation = () => {
   useInitNavigation();
@@ -21,12 +24,12 @@ export const AppNavigation = () => {
     <Stack sx={Container}>
       <Box sx={NavigationContainer}>
         <Tabs
-          value={navigation.location.pathname}
+          value={buildTabsValue()}
           onChange={(_, value) => navigation.navigate(value)}
         >
           <Tab label={PLAYER_LABEL} value={Paths.player} />
           <Tab label={VOCABULARY_LABEL} value={Paths.vocabulary} />
-          <Tab label="Settings" value={Paths.settings} />
+          <Tab label={SETTINGS_LABEL} value={Paths.settings} />
         </Tabs>
         <Paper sx={TabContainer}>
           <Routes>
@@ -36,6 +39,7 @@ export const AppNavigation = () => {
                 <Route element={<Navigate replace to={Paths.player} />} index />
                 <Route path={Paths.player} element={<Player />} />
                 <Route path={Paths.vocabulary} element={<Vocabulary />} />
+                <Route path={Paths.word} element={<Word />} />
                 <Route path={Paths.settings} element={<Settings />} />
               </Route>
             </Route>
