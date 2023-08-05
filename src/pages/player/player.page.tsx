@@ -27,18 +27,20 @@ export const Player = () => {
         {isPlaying ? "Stop" : "Play"}
       </Button>
       {Boolean(lastPlayedRemindersSize) && (
-        <Stack>
+        <>
           <Typography variant="h4">Last played</Typography>
-          {lastPlayedReminders.length ? (
-            lastPlayedReminders.map((reminderId, inx) => (
-              <Reminder key={nanoid()} id={reminderId} />
-            ))
-          ) : (
-            <Typography variant="body1">
-              Still no played words in current player session
-            </Typography>
-          )}
-        </Stack>
+          <Stack>
+            {lastPlayedReminders.length ? (
+              lastPlayedReminders.map((reminderId, inx) => (
+                <Reminder key={nanoid()} id={reminderId} />
+              ))
+            ) : (
+              <Typography variant="body1">
+                Still no played words in current player session
+              </Typography>
+            )}
+          </Stack>
+        </>
       )}
     </Box>
   );

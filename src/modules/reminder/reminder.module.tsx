@@ -1,8 +1,8 @@
 import { useStoreMap } from "effector-react";
 import { vocabularyModel } from "../../models";
-import { Box, Typography } from "@mui/material";
-import { Container } from "./reminder.styles";
+import { Box, Chip } from "@mui/material";
 import { vocabularySelectors } from "../../models/vocabulary";
+import { WordContainer } from "./reminder.styles";
 
 type ReminderProps = {
   id: number;
@@ -15,9 +15,9 @@ export const Reminder = ({ id }: ReminderProps) => {
   );
 
   return (
-    <Box sx={Container}>
-      <Typography variant="h6">{reminder?.sourceWord.text} -</Typography>
-      <Typography variant="h6">{reminder?.targetWord.text}</Typography>
+    <Box sx={WordContainer}>
+      <Chip label={reminder?.sourceWord.text} />
+      <Chip label={reminder?.targetWord.text} variant="outlined" />
     </Box>
   );
 };
