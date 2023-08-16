@@ -1,4 +1,4 @@
-import { NewWord, Word } from "shared/vocabulary.types";
+import { NewWord } from "shared/vocabulary.types";
 import {
   attach,
   createEffect,
@@ -19,12 +19,16 @@ import {
   CONFIRM_DELETE_TEXT,
   CONFIRM_DELETE_TITLE,
 } from "../vocabulary/vocabulary.constants";
+import { set } from "lodash";
 
-export const $word = createStore<Word | NewWord>(DEFAULT_WORD);
+export const $word = createStore<NewWord>(DEFAULT_WORD);
+
+export const $isTranslatePending = wordApi.translateWordFx.pending;
 
 export const saveClicked = createEvent();
 export const wordTextChanged = createEvent<ChangeTextPayload>();
 export const deleteWordClicked = createEvent<number>();
+export const translateClicked = createEvent();
 
 export const deleteWordFx = attach({ effect: vocabularyApi.deleteWordFx });
 export const backToVocabularyFx = createEffect(() =>
@@ -77,4 +81,19 @@ sample({
 sample({
   clock: deleteWordFx.done,
   target: backToVocabularyFx,
+});
+
+// translate text
+sample({
+  clock: translateClicked,
+  source: $word,
+  fn: (src) => src.sourceWord,
+  target: wordApi.translateWordFx,
+});
+
+sample({
+  clock: wordApi.translateWordFx.doneData,
+  source: $word,
+  fn: (word, res) => set(word, "targetWord.text", res.text),
+  target: $word,
 });

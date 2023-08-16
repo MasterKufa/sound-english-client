@@ -10,8 +10,10 @@ import { Paths } from "../../app/app.types";
 
 export const Word = () => {
   const word = useUnit(wordModel.$word);
+  const isTranslatePending = useUnit(wordModel.$isTranslatePending);
   const actions = useUnit({
     saveClicked: wordModel.saveClicked,
+    translateClicked: wordModel.translateClicked,
     wordTextChanged: wordModel.wordTextChanged,
     deleteWordClicked: wordModel.deleteWordClicked,
   });
@@ -67,6 +69,14 @@ export const Word = () => {
           }
         />
       </Box>
+
+      <Button
+        disabled={!word.sourceWord.text || isTranslatePending}
+        variant="contained"
+        onClick={actions.translateClicked}
+      >
+        Google translate from English
+      </Button>
     </Box>
   );
 };
