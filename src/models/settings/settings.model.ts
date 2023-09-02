@@ -20,6 +20,7 @@ export const $settings = createStore<Settings>({
   repeatWordCount: 1,
   repeatSourceDelay: 0,
   repeatTargetDelay: 0,
+  isCustomAudioPreferable: false,
 });
 
 export const $sourceVoices = createStore<Array<Voice>>([]);

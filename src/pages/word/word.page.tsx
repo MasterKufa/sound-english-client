@@ -1,5 +1,11 @@
 import { useGate, useUnit } from "effector-react";
-import { Box, Button, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  LinearProgress,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { ScreenContainer } from "../../shared/styles";
 import { wordModel } from "../../models/word";
 import { useParams } from "react-router-dom";
@@ -7,6 +13,8 @@ import { WORD_EDIT_LABEL, WORD_NEW_LABEL } from "./word.constants";
 import { WordControls, WordSpelling } from "./word.styles";
 import { navigation } from "../../shared/navigate";
 import { Paths } from "../../app/app.types";
+import { Lang } from "../../shared/settings.types";
+import { CustomAudio } from "modules";
 
 export const Word = () => {
   const word = useUnit(wordModel.$word);
@@ -69,7 +77,6 @@ export const Word = () => {
           }
         />
       </Box>
-
       <Button
         disabled={!word.sourceWord.text || isTranslatePending}
         variant="contained"
@@ -77,6 +84,9 @@ export const Word = () => {
       >
         Google translate from English
       </Button>
+
+      <CustomAudio lang={Lang.en} />
+      <CustomAudio lang={Lang.ru} />
     </Box>
   );
 };

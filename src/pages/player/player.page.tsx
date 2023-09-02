@@ -2,7 +2,7 @@ import { useGate, useUnit } from "effector-react";
 import { playerModel, settingsModel } from "../../models";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import { PLAYER_LABEL } from "./player.constants";
-import { Reminder } from "../../modules/reminder";
+import { Reminder } from "../../modules";
 import { ScreenContainer } from "../../shared/styles";
 import { nanoid } from "nanoid";
 

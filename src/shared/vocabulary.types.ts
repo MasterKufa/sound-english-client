@@ -19,3 +19,10 @@ export type WordUnit = {
 };
 
 export type NewWordUnit = Omit<WordUnit, "id">;
+
+export type CustomAudio = {
+  buffer: Blob;
+  mimeType: string;
+  isModified?: boolean;
+};
+export type CustomAudios = Partial<Record<Lang, CustomAudio>>;

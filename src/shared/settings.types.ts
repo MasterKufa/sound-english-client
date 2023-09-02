@@ -16,6 +16,7 @@ export type Settings = {
   repeatWordCount: number;
   repeatSourceDelay: number;
   repeatTargetDelay: number;
+  isCustomAudioPreferable: boolean;
 };
 
 export type Voice = {

@@ -1,6 +1,12 @@
 import { useGate, useUnit } from "effector-react";
 import { settingsModel } from "../../models";
-import { Box, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Checkbox,
+  FormControlLabel,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { SETTINGS_LABEL } from "./settings.constants";
 import { ScreenContainer } from "../../shared/styles";
 import { NumericInput, Select } from "../../components";
@@ -22,7 +28,7 @@ export const Settings = () => {
 
   const buildProps = (field: keyof SettingType, withAllowedText?: boolean) => ({
     field,
-    value: settings[field],
+    value: settings[field] as string | number,
     onChange: actions.changeSettings,
     helperText: withAllowedText ? buildAllowedText(field) : undefined,
   });
@@ -39,6 +45,20 @@ export const Settings = () => {
             { value: QueueStrategy.sequence, label: "Sequence" },
             { value: QueueStrategy.random, label: "Random" },
           ]}
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={settings.isCustomAudioPreferable}
+              onChange={(_, value) =>
+                actions.changeSettings({
+                  field: "isCustomAudioPreferable",
+                  value,
+                })
+              }
+            />
+          }
+          label="Play custom audio if exist (instead of robot)"
         />
         <Select
           {...buildProps("sourceVoice")}
