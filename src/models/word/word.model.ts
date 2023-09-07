@@ -115,6 +115,8 @@ sample({
   target: backToVocabularyFx,
 });
 
+$word.reset(backToVocabularyFx.done);
+
 // translate text
 sample({
   clock: translateClicked,
