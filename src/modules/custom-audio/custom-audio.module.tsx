@@ -1,7 +1,7 @@
 import { Box, Button, IconButton } from "@mui/material";
 import { Lang } from "../../shared/settings.types";
 import { useUnit } from "effector-react";
-import { wordModel } from "../../models/word";
+import { wordCustomAudioModel } from "../../models";
 import { Container, RecButton } from "./custom-audio.styles";
 import MicIcon from "@mui/icons-material/Mic";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
@@ -12,15 +12,17 @@ type CustomAudioProps = {
 };
 
 export const CustomAudio = ({ lang }: CustomAudioProps) => {
-  const customAudioRecording = useUnit(wordModel.$customAudioRecording);
-  const customAudioPlaying = useUnit(wordModel.$customAudioPlaying);
-  const customAudios = useUnit(wordModel.$customAudios);
+  const customAudioRecording = useUnit(
+    wordCustomAudioModel.$customAudioRecording
+  );
+  const customAudioPlaying = useUnit(wordCustomAudioModel.$customAudioPlaying);
+  const customAudios = useUnit(wordCustomAudioModel.$customAudios);
   const hasAudio = Boolean(customAudios[lang]);
 
   const actions = useUnit({
-    customAudioRecordToggled: wordModel.customAudioRecordToggled,
-    customAudioCheckToggled: wordModel.customAudioCheckToggled,
-    customAudioDeleteClicked: wordModel.customAudioDeleteClicked,
+    customAudioRecordToggled: wordCustomAudioModel.customAudioRecordToggled,
+    customAudioCheckToggled: wordCustomAudioModel.customAudioCheckToggled,
+    customAudioDeleteClicked: wordCustomAudioModel.customAudioDeleteClicked,
   });
 
   return (
