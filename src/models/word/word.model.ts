@@ -18,7 +18,7 @@ import {
   CONFIRM_DELETE_TEXT,
   CONFIRM_DELETE_TITLE,
 } from "../vocabulary/vocabulary.constants";
-import { set } from "lodash";
+import { isNumber, set } from "lodash";
 import { AppGate } from "models/app.model";
 
 export const $word = createStore<NewWord | Word>(DEFAULT_WORD);
@@ -41,7 +41,7 @@ export const WordGate = createGate<number>();
 sample({
   clock: [AppGate.open, WordGate.open],
   source: WordGate.state,
-  filter: (_, wordId) => Boolean(wordId),
+  filter: (wordId) => isNumber(wordId) && Boolean(wordId),
   target: vocabularyApi.loadWordFx,
 });
 
