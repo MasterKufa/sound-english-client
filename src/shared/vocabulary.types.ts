@@ -5,11 +5,13 @@ export type Word = {
   sourceWord: WordUnit;
   targetWord: WordUnit;
   id: number;
+  customAudios: CustomAudios;
 };
 
 export type NewWord = {
   sourceWord: NewWordUnit;
   targetWord: NewWordUnit;
+  customAudios: CustomAudios;
 };
 
 export type WordUnit = {

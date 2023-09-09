@@ -10,4 +10,5 @@ export const DEFAULT_WORD: NewWord = {
     lang: Lang.ru,
     text: "",
   },
+  customAudios: {},
 };

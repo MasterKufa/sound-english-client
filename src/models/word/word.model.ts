@@ -11,7 +11,6 @@ import { ChangeTextPayload } from "./word.types";
 import { DEFAULT_WORD } from "./word.constants";
 import { createGate } from "effector-react";
 import { changeWordText } from "./word.helpers";
-import { vocabularyModel, vocabularySelectors } from "../vocabulary";
 import { Confirm, Notification } from "@master_kufa/client-tools";
 import { navigation } from "../../shared/navigate";
 import { Paths } from "../../app/app.types";
@@ -20,6 +19,7 @@ import {
   CONFIRM_DELETE_TITLE,
 } from "../vocabulary/vocabulary.constants";
 import { set } from "lodash";
+import { AppGate } from "models/app.model";
 
 export const $word = createStore<NewWord | Word>(DEFAULT_WORD);
 
@@ -35,13 +35,18 @@ export const backToVocabularyFx = createEffect(() =>
   navigation.navigate(Paths.vocabulary)
 );
 
-export const WordGate = createGate<number | void>();
+export const WordGate = createGate<number>();
+
+// AppGate open trigger after WordGate so need to handle it on first open link with word
+sample({
+  clock: [AppGate.open, WordGate.open],
+  source: WordGate.state,
+  filter: (_, wordId) => Boolean(wordId),
+  target: vocabularyApi.loadWordFx,
+});
 
 sample({
-  clock: WordGate.open,
-  source: vocabularyModel.$words,
-  fn: (words, id) =>
-    (id && vocabularySelectors.findWordById(id)(words)) || DEFAULT_WORD,
+  clock: vocabularyApi.loadWordFx.doneData,
   target: $word,
 });
 
@@ -83,7 +88,12 @@ sample({
   target: backToVocabularyFx,
 });
 
-$word.reset(backToVocabularyFx.done);
+sample({
+  clock: WordGate.status,
+  filter: (isOpen) => !isOpen,
+  fn: () => DEFAULT_WORD,
+  target: $word,
+});
 
 // translate text
 sample({

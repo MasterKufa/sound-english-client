@@ -1,7 +1,7 @@
 import { Box, Button, IconButton } from "@mui/material";
 import { Lang } from "../../shared/settings.types";
 import { useUnit } from "effector-react";
-import { wordCustomAudioModel } from "../../models";
+import { wordCustomAudioModel, wordModel } from "../../models";
 import { Container, RecButton } from "./custom-audio.styles";
 import MicIcon from "@mui/icons-material/Mic";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
@@ -16,7 +16,7 @@ export const CustomAudio = ({ lang }: CustomAudioProps) => {
     wordCustomAudioModel.$customAudioRecording
   );
   const customAudioPlaying = useUnit(wordCustomAudioModel.$customAudioPlaying);
-  const customAudios = useUnit(wordCustomAudioModel.$customAudios);
+  const { customAudios } = useUnit(wordModel.$word);
   const hasAudio = Boolean(customAudios[lang]);
 
   const actions = useUnit({

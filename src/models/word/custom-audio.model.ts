@@ -1,12 +1,10 @@
-import { vocabularyApi, wordApi } from "api";
 import { createStore, createEvent, createEffect, sample } from "effector";
 import { omit } from "lodash";
 import { Lang } from "shared/settings.types";
-import { CustomAudios, NewWord, Word } from "shared/vocabulary.types";
+import { CustomAudios } from "shared/vocabulary.types";
 import { recorder } from "./word-recording";
-import { WordGate, $word } from "./word.model";
+import { $word } from "./word.model";
 
-export const $customAudios = createStore<CustomAudios>({});
 export const $customAudioRecording = createStore<Lang | null>(null);
 export const $customAudioPlaying = createStore<Lang | null>(null);
 
@@ -38,19 +36,6 @@ export const playCustomAudioFx = createEffect<
       audio.play();
     })
 );
-// load custom audio
-sample({
-  clock: WordGate.open,
-  source: $word,
-  filter: (word: Word | NewWord): word is Word => Boolean((word as Word).id),
-  fn: (word) => word.id,
-  target: vocabularyApi.loadCustomAudioFx,
-});
-
-sample({
-  clock: vocabularyApi.loadCustomAudioFx.doneData,
-  target: $customAudios,
-});
 
 // record custom audio
 $customAudioRecording.on(customAudioRecordToggled, (value, payload) =>
@@ -75,16 +60,19 @@ sample({
 
 sample({
   clock: stopRecordCustomAudiFx.done,
-  source: $customAudios,
-  fn: (customAudios, { params, result }) => ({
-    ...customAudios,
-    [params]: {
-      buffer: result,
-      mimeType: result.type.split(";")[0],
-      isModified: true,
+  source: $word,
+  fn: (word, { params, result }) => ({
+    ...word,
+    customAudios: {
+      ...word.customAudios,
+      [params]: {
+        buffer: result,
+        mimeType: result.type.split(";")[0],
+        isModified: true,
+      },
     },
   }),
-  target: $customAudios,
+  target: $word,
 });
 
 //play custom audio to check
@@ -94,8 +82,8 @@ $customAudioPlaying.on(customAudioCheckToggled, (value, payload) =>
 
 sample({
   clock: $customAudioPlaying,
-  source: $customAudios,
-  fn: (customAudios, payload) => [customAudios, payload] as const,
+  source: $word,
+  fn: (word, payload) => [word.customAudios, payload] as const,
   target: playCustomAudioFx,
 });
 
@@ -106,19 +94,7 @@ sample({
 });
 
 // delete customAudio
-$customAudios.on(customAudioDeleteClicked, (word, lang) => omit(word, lang));
-
-//save customAudio (wait for save and use generated id need for new words)
-sample({
-  clock: wordApi.saveWordFx.doneData,
-  source: $customAudios,
-  fn: (customAudios, word) => ({ wordId: word.id, customAudios }),
-  target: vocabularyApi.saveCustomAudiosFx,
-});
-
-sample({
-  clock: WordGate.status,
-  filter: (isOpen) => !isOpen,
-  fn: () => ({}),
-  target: $customAudios,
-});
+$word.on(customAudioDeleteClicked, (word, lang) => ({
+  ...word,
+  customAudios: omit(word.customAudios, lang),
+}));
