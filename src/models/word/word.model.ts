@@ -55,6 +55,11 @@ $word.on(wordTextChanged, changeWordText);
 sample({
   clock: saveClicked,
   source: $word,
+  fn: (word) => ({
+    ...word,
+    sourceWord: { ...word.sourceWord, text: word.sourceWord.text.trim() },
+    targetWord: { ...word.targetWord, text: word.targetWord.text.trim() },
+  }),
   target: wordApi.saveWordFx,
 });
 
