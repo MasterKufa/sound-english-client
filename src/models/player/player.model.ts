@@ -9,11 +9,11 @@ import {
 import { createGate } from "effector-react";
 import { PlayerWord } from "../../shared/player.types";
 import { vocabularyModel } from "models/vocabulary";
-import { generateEnqueueWordId } from "./player.queue";
+import { generateEnqueueWord } from "./player.queue";
 import { settingsModel } from "models/settings";
 import { handleAudioControls, playAudio, stopAudio } from "./player.processor";
 import { first } from "lodash";
-import { fetchPlayerWord } from "./player.helpers";
+import { fetchPlayerWord } from "./player.vendor";
 import { Notification } from "@master_kufa/client-tools";
 import { Word } from "../../shared/vocabulary.types";
 import { Settings } from "../../shared/settings.types";
@@ -41,7 +41,7 @@ const playWordFx = attach({
 const stopPlayingWordFx = createEffect(stopAudio);
 
 export const fetchPlayerWordFx = createEffect<
-  Parameters<typeof generateEnqueueWordId>,
+  Parameters<typeof generateEnqueueWord>,
   PlayerWord
 >(fetchPlayerWord);
 

@@ -10,6 +10,7 @@
     "@mui/material": "^5.13.4",
     "effector": "^22.8.6",
     "effector-react": "^22.5.3",
+    "idb": "^7.1.1",
     "lodash": "^4.17.21",
     "nanoid": "^4.0.2",
     "react": "^18.2.0",

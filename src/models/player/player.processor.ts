@@ -36,7 +36,7 @@ export const playAudio = ([queue, words, { delayPlayerWordToWord }]: [
       return;
     }
     const { audioBuffer, id } = playerWord;
-    const blob = new Blob([audioBuffer], { type: "audio/wav" });
+    const blob = new Blob([audioBuffer], { type: "audio/mp3" });
     URL.revokeObjectURL(audioTrack.src);
     audioTrack.src = window.URL.createObjectURL(blob);
 

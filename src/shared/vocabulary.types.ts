@@ -1,6 +1,7 @@
 import { Lang } from "./settings.types";
 
 export type Word = {
+  generatedSoundHash: string;
   createdAt: string;
   sourceWord: WordUnit;
   targetWord: WordUnit;
