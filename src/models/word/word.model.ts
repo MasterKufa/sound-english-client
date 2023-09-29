@@ -24,6 +24,7 @@ import { AppGate } from "models/app.model";
 export const $word = createStore<NewWord | Word>(DEFAULT_WORD);
 
 export const $isTranslatePending = wordApi.translateWordFx.pending;
+export const $isSavePending = wordApi.saveWordFx.pending;
 
 export const saveClicked = createEvent();
 export const wordTextChanged = createEvent<ChangeTextPayload>();
