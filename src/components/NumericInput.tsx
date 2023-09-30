@@ -4,11 +4,7 @@ type NumericInputProps<T> = {
   label: string;
   field: T;
   value: string | number;
-  onChange: (payload: {
-    field: T;
-    value: string | number;
-    withConstraints?: boolean;
-  }) => void;
+  onChange: (payload: { field: T; value: string | number }) => void;
   helperText?: string;
 };
 
@@ -27,7 +23,6 @@ export const NumericInput = <T extends string>({
       onChange({
         field,
         value,
-        withConstraints: true,
       })
     }
     onChange={({ target: { value } }) => onChange({ field, value })}

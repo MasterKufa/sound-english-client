@@ -1,27 +1,24 @@
-import { createEvent, createStore, sample } from "effector";
+import {
+  attach,
+  createEffect,
+  createEvent,
+  createStore,
+  sample,
+} from "effector";
 import { createGate } from "effector-react";
-import { Lang, QueueStrategy, Settings, Voice } from "shared/settings.types";
+import { Lang, Settings, Voice } from "shared/settings.types";
 import { AppGate } from "../app.model";
 import { settingsApi } from "../../api";
 import { applySettingsConstraints } from "./settings.constraints";
 import { ChangeSettingsPayload } from "./settings.types";
+import {
+  DEFAULT_SETTINGS,
+  SETTINGS_WORD_INVALIDATORS,
+} from "./settings.constants";
+import { invalidateWordsCache } from "../player/player.vendor";
 
-export const $settings = createStore<Settings>({
-  queueStrategy: QueueStrategy.sequence,
-  //min 2 to correct sequence enqueue
-  playerQueueSize: 2,
-  lastPlayedRemindersSize: 1,
-  delayPlayerSourceToTarget: 0,
-  delayPlayerWordToWord: 0,
-  sourceVoice: "",
-  targetVoice: "",
-  repeatSourceCount: 1,
-  repeatTargetCount: 1,
-  repeatWordCount: 1,
-  repeatSourceDelay: 0,
-  repeatTargetDelay: 0,
-  isCustomAudioPreferable: false,
-});
+export const $settings = createStore<Settings>(DEFAULT_SETTINGS);
+export const $settingsOnEditStarted = createStore<Settings>(DEFAULT_SETTINGS);
 
 export const $sourceVoices = createStore<Array<Voice>>([]);
 export const $targetVoices = createStore<Array<Voice>>([]);
@@ -69,20 +66,40 @@ sample({
   target: $targetVoices,
 });
 
+sample({
+  clock: [SettingsGate.open, settingsApi.loadSettingsFx.doneData],
+  source: $settings,
+  target: $settingsOnEditStarted,
+});
+
 // change settings
 $settings.on(changeSettings, (settings, payload) => ({
   ...settings,
-  [payload.field]: payload.withConstraints
-    ? applySettingsConstraints(payload).value
-    : payload.value,
+  [payload.field]: applySettingsConstraints(payload).value,
 }));
 
 // save on quit tab
 sample({
   clock: SettingsGate.status,
-  source: $settings,
+  source: [$settings, $settingsOnEditStarted] as const,
   filter: (_, isOpen) => !isOpen,
-  target: settingsApi.changeSettingsFx,
+  target: [
+    attach({
+      effect: settingsApi.changeSettingsFx,
+      mapParams: ([settings]: [Settings]) => settings,
+    }),
+    createEffect<[Settings, Settings], void>(
+      ([settings, settingsOnEditStarted]) => {
+        if (
+          SETTINGS_WORD_INVALIDATORS.some(
+            (key) => settings[key] !== settingsOnEditStarted[key]
+          )
+        ) {
+          invalidateWordsCache();
+        }
+      }
+    ),
+  ],
 });
 
 window.addEventListener("beforeunload", SettingsGate.close);

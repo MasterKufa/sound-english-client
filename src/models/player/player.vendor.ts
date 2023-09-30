@@ -51,3 +51,5 @@ export const fetchPlayerWord = ([strategy, words, playerQueue]: [
 
     resolve({ id, audioBuffer });
   });
+
+export const invalidateWordsCache = async () => wordsDb?.clear(STORE_NAME);
