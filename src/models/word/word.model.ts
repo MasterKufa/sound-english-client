@@ -79,19 +79,6 @@ sample({
 });
 
 sample({
-  clock: [
-    wordApi.saveWordFx.fail,
-    wordApi.translateWordFx.fail,
-    deleteWordFx.fail,
-  ],
-  fn: (): Notification.PayloadType => ({
-    type: "error",
-    message: "An error occurred. Please try again later.",
-  }),
-  target: Notification.add,
-});
-
-sample({
   clock: deleteWordClicked,
   target: createEffect<number, void>((payload) => {
     Confirm.show({

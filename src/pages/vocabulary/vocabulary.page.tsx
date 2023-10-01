@@ -6,6 +6,7 @@ import { Word } from "../../modules";
 import { ScreenContainer } from "../../shared/styles";
 import { Paths } from "../../app/app.types";
 import { navigation } from "../../shared/navigate";
+import { FILE_UPLOAD_LABEL } from "../file-upload/file-upload.constants";
 
 export const Vocabulary = () => {
   const words = useUnit(vocabularyModel.$words);
@@ -20,6 +21,12 @@ export const Vocabulary = () => {
         onClick={() => navigation.navigate(Paths.vocabulary + `/new`)}
       >
         Add word
+      </Button>
+      <Button
+        variant="contained"
+        onClick={() => navigation.navigate(Paths.fileUpload)}
+      >
+        {FILE_UPLOAD_LABEL}
       </Button>
       <Stack>
         {words.map((word) => (

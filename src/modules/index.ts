@@ -4,3 +4,6 @@ export { Reminder } from "./reminder";
 export { WordControls } from "./word-controls";
 export { WordSpelling } from "./word-spelling";
 export { WordTranslate } from "./word-translate";
+export { WordBulkUnit } from "./word-bulk-unit";
+export { WordBulkControls } from "./word-bulk-controls";
+export { WordsBulkList } from "./words-bulk-list";

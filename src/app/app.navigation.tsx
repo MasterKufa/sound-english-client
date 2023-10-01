@@ -7,6 +7,7 @@ import {
   VOCABULARY_LABEL,
   Vocabulary,
   SETTINGS_LABEL,
+  FileUpload,
 } from "../pages";
 import { Box, Paper, Stack, Tab, Tabs } from "@mui/material";
 import { useGate } from "effector-react";
@@ -39,6 +40,7 @@ export const AppNavigation = () => {
                 <Route element={<Navigate replace to={Paths.player} />} index />
                 <Route path={Paths.player} element={<Player />} />
                 <Route path={Paths.vocabulary} element={<Vocabulary />} />
+                <Route path={Paths.fileUpload} element={<FileUpload />} />
                 <Route path={Paths.word} element={<Word />} />
                 <Route path={Paths.settings} element={<Settings />} />
               </Route>

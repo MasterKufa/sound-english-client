@@ -6,4 +6,5 @@ export enum Paths {
   // path that does not match tabs must be below
   word = "/sound-english-client/vocabulary/:id",
   root = "/sound-english-client",
+  fileUpload = "/sound-english-client/vocabulary/file-upload",
 }

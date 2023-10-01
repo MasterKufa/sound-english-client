@@ -29,3 +29,13 @@ export type CustomAudio = {
   isModified?: boolean;
 };
 export type CustomAudios = Partial<Record<Lang, CustomAudio>>;
+
+export type WordDefinition = {
+  [Lang.en]: string;
+  [Lang.ru]: string;
+};
+
+export type WordDefinitionView = WordDefinition & {
+  id: string;
+  isSelected: boolean;
+};
