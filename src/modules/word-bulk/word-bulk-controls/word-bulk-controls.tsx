@@ -33,11 +33,13 @@ export const WordBulkControls = () => {
             e.target.files && actions.selectFile(e.target.files[0])
           }
           type="file"
+          accept=".xls,.xlsx,.csv"
         />
       </Button>
       <Typography variant="caption">
-        CSV format only available. File must have two columns. Column headers
-        must be from the list of <b>{values(Lang).join(", ")}</b>.
+        <b>CSV, XLSX, XLS</b> formats are only available. File must have two
+        columns. Column headers must be from the list of{" "}
+        <b>{values(Lang).join(", ")}</b>.
       </Typography>
 
       {file && (
