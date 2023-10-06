@@ -1,9 +1,9 @@
 import { Box, Button, Typography } from "@mui/material";
 import { values } from "lodash";
-import { Lang } from "../../shared/settings.types";
+import { Lang } from "shared/settings.types";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useUnit } from "effector-react";
-import { fileUploadModel } from "../../models";
+import { fileUploadModel } from "models";
 import {
   UploadedControlsContainer,
   WordBulkControlsContainer,

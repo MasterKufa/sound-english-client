@@ -1,7 +1,7 @@
 import { Box, Button } from "@mui/material";
 import { useUnit } from "effector-react";
-import { wordModel } from "../../models";
-import { Lang } from "../../shared/settings.types";
+import { wordModel } from "models";
+import { Lang } from "shared/settings.types";
 import { CustomAudio } from "../custom-audio";
 import { WordTranslateContainer } from "./word-translate.styles";
 

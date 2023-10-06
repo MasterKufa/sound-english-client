@@ -1,7 +1,7 @@
 import { Box, TextField } from "@mui/material";
 import { useUnit } from "effector-react";
 import { WordSpellingContainer } from "./word-spelling.styles";
-import { wordModel } from "../../models";
+import { wordModel } from "models";
 
 export const WordSpelling = () => {
   const word = useUnit(wordModel.$word);

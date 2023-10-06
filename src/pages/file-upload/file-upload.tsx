@@ -1,14 +1,15 @@
-import { Backdrop, Box, CircularProgress, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { ScreenContainer } from "../../shared/styles";
 import { FILE_UPLOAD_LABEL } from "./file-upload.constants";
-import { useGate, useUnit } from "effector-react";
+import { useGate } from "effector-react";
 import { fileUploadModel } from "../../models";
-import { WordBulkControls, WordsBulkList } from "../../modules";
+import {
+  WordBulkControls,
+  WordBulkLoading,
+  WordsBulkList,
+} from "../../modules";
 
 export const FileUpload = () => {
-  const processFilePending = useUnit(fileUploadModel.$processFilePending);
-  const bulkUploadPending = useUnit(fileUploadModel.$bulkUploadPending);
-
   useGate(fileUploadModel.FileUploadGate);
 
   return (
@@ -16,9 +17,7 @@ export const FileUpload = () => {
       <Typography variant="h4">{FILE_UPLOAD_LABEL}</Typography>
       <WordBulkControls />
       <WordsBulkList />
-      <Backdrop open={processFilePending || bulkUploadPending}>
-        <CircularProgress />
-      </Backdrop>
+      <WordBulkLoading />
     </Box>
   );
 };

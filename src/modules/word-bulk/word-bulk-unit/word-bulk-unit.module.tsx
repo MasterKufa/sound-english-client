@@ -1,9 +1,9 @@
 import { useUnit } from "effector-react";
-import { fileUploadModel } from "../../models";
+import { fileUploadModel } from "models";
 import { Box, Checkbox, Chip } from "@mui/material";
 import { WordDefinitionView } from "shared/vocabulary.types";
 import { Container, WordContainer } from "./word-bulk-unit.styles";
-import { Lang } from "../../shared/settings.types";
+import { Lang } from "shared/settings.types";
 
 type WordBulkUnitProps = {
   word: WordDefinitionView;

@@ -15,11 +15,11 @@ sample({
     wordApi.saveWordFx.fail,
     wordApi.translateWordFx.fail,
     vocabularyApi.deleteWordFx.fail,
-    vocabularyApi.bulkUploadWordsFx.done,
+    vocabularyApi.bulkUploadWordsFx.fail,
   ],
-  fn: (): Notification.PayloadType => ({
+  fn: (data): Notification.PayloadType => ({
     type: "error",
-    message: "An error occurred. Please try again later.",
+    message: data.error.error || "An error occurred. Please try again later.",
   }),
   target: Notification.add,
 });

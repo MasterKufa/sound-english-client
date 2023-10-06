@@ -1,9 +1,9 @@
 import { Box, Button } from "@mui/material";
-import { Paths } from "../../app/app.types";
-import { navigation } from "../../shared/navigate";
+import { Paths } from "app/app.types";
+import { navigation } from "shared/navigate";
 import { WordControlsContainer } from "./word-controls.styles";
 import { useUnit } from "effector-react";
-import { wordModel } from "../../models";
+import { wordModel } from "models";
 import { useParams } from "react-router-dom";
 
 export const WordControls = () => {

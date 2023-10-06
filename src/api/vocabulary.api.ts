@@ -4,9 +4,11 @@ import { Word, WordDefinition } from "shared/vocabulary.types";
 import { ACTIONS } from "./actions";
 import {
   BulkWordUploadPayload,
+  BulkWordsProcessResponse,
   FileUploadPayload,
   IdPayload,
 } from "./vocabulary.types";
+import { ApiError } from "./types";
 
 export const loadWordsFx = createEffect<void, Array<Word>>(() =>
   socket.emitWithAnswer<void, Array<Word>>(ACTIONS.LOAD_WORDS)
@@ -18,26 +20,30 @@ export const loadWordFx = createEffect<number, Word>((payload) =>
   })
 );
 
-export const deleteWordFx = createEffect<number, void>((payload) =>
+export const deleteWordFx = createEffect<number, void, ApiError>((payload) =>
   socket.emitWithAnswer<IdPayload, void>(ACTIONS.DELETE_WORD, {
     id: payload,
   })
 );
 
-export const fileUploadFx = createEffect<File, Array<WordDefinition>>((file) =>
-  socket.emitWithAnswer<FileUploadPayload, Array<WordDefinition>>(
-    ACTIONS.PROCESS_FILE,
-    {
-      file,
-      name: file.name,
-    }
-  )
+export const fileUploadFx = createEffect<File, BulkWordsProcessResponse>(
+  (file) =>
+    socket.emitWithAnswer<FileUploadPayload, BulkWordsProcessResponse>(
+      ACTIONS.PROCESS_FILE,
+      {
+        file,
+        name: file.name,
+      }
+    )
 );
 
-export const bulkUploadWordsFx = createEffect<Array<WordDefinition>, void>(
-  (words) =>
-    socket.emitWithAnswer<BulkWordUploadPayload, void>(
-      ACTIONS.BULK_UPLOAD_WORDS,
-      { words }
-    )
+export const bulkUploadWordsFx = createEffect<
+  Array<WordDefinition>,
+  Array<Word>,
+  ApiError
+>((words) =>
+  socket.emitWithAnswer<BulkWordUploadPayload, Array<Word>>(
+    ACTIONS.BULK_UPLOAD_WORDS,
+    { words }
+  )
 );

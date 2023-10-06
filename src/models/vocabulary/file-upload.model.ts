@@ -1,18 +1,30 @@
 import { createEffect, createEvent, createStore, sample } from "effector";
 import { createGate } from "effector-react";
-import { WordDefinitionView } from "../../shared/vocabulary.types";
+import {
+  BulkUploadFailedRecord,
+  BulkUploadProgress,
+  WordDefinitionView,
+} from "../../shared/vocabulary.types";
 import { vocabularyApi } from "../../api";
 import { nanoid } from "nanoid";
 import { pick } from "lodash";
-import { Notification } from "@master_kufa/client-tools";
+import { Notification, socket } from "@master_kufa/client-tools";
 import { Lang } from "../../shared/settings.types";
 import { navigation } from "../../shared/navigate";
 import { Paths } from "../../app/app.types";
+import { ACTIONS } from "../../api/actions";
+import { AppGate } from "../app.model";
 
 export const FileUploadGate = createGate();
 
 export const $words = createStore<Array<WordDefinitionView>>([]);
+export const $wordsFailed = createStore<Array<BulkUploadFailedRecord>>([]);
+export const $bulkUploadProgress = createStore<BulkUploadProgress | null>(null);
 export const $file = createStore<File | null>(null);
+
+export const $selectedWordsCount = $words.map(
+  (words) => words.filter((word) => word.isSelected).length
+);
 
 export const $processFilePending = vocabularyApi.fileUploadFx.pending;
 export const $bulkUploadPending = vocabularyApi.bulkUploadWordsFx.pending;
@@ -21,8 +33,17 @@ export const selectFile = createEvent<File>();
 export const clearSelectedFile = createEvent();
 export const processFile = createEvent();
 export const toggleWordSelection = createEvent<string>();
+export const toggleSelectAll = createEvent();
 export const bulkUploadWords = createEvent();
+export const bulkUploadWordsProgress = createEvent<BulkUploadProgress>();
 export const closeFileUpload = createEvent();
+
+sample({
+  clock: AppGate.open,
+  target: createEffect(() =>
+    socket.client.on(ACTIONS.BULK_UPLOAD_PROGRESS, bulkUploadWordsProgress)
+  ),
+});
 
 sample({
   clock: selectFile,
@@ -30,6 +51,8 @@ sample({
 });
 
 $file.reset(clearSelectedFile);
+$words.reset(clearSelectedFile);
+$wordsFailed.reset(clearSelectedFile);
 
 sample({
   clock: processFile,
@@ -40,13 +63,19 @@ sample({
 
 sample({
   clock: vocabularyApi.fileUploadFx.doneData,
-  fn: (words) =>
-    words.map<WordDefinitionView>((word) => ({
+  fn: ({ records }) =>
+    records.map<WordDefinitionView>((word) => ({
       ...word,
       id: nanoid(),
       isSelected: true,
     })),
   target: $words,
+});
+
+sample({
+  clock: vocabularyApi.fileUploadFx.doneData,
+  fn: ({ failedRecords }) => failedRecords,
+  target: $wordsFailed,
 });
 
 sample({
@@ -60,11 +89,27 @@ sample({
 });
 
 sample({
+  clock: toggleSelectAll,
+  source: [$words, $selectedWordsCount] as const,
+  fn: ([words, selectedWordsCount]) =>
+    words.map((word) => ({
+      ...word,
+      isSelected: !Boolean(selectedWordsCount),
+    })),
+  target: $words,
+});
+
+sample({
   clock: bulkUploadWords,
   source: $words,
-  fn: (words) => words.map((word) => pick(word, Lang.en, Lang.ru)),
+  fn: (words) =>
+    words
+      .filter((word) => word.isSelected)
+      .map((word) => pick(word, Lang.en, Lang.ru)),
   target: vocabularyApi.bulkUploadWordsFx,
 });
+
+sample({ clock: bulkUploadWordsProgress, target: $bulkUploadProgress });
 
 sample({
   clock: vocabularyApi.bulkUploadWordsFx.done,
@@ -74,6 +119,8 @@ sample({
   }),
   target: Notification.add,
 });
+
+$bulkUploadProgress.reset(vocabularyApi.bulkUploadWordsFx.finally);
 
 sample({
   clock: vocabularyApi.bulkUploadWordsFx.done,
@@ -87,4 +134,5 @@ sample({
 });
 
 $words.reset(closeFileUpload);
+$wordsFailed.reset(closeFileUpload);
 $file.reset(closeFileUpload);

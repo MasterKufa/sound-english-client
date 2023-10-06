@@ -51,3 +51,10 @@ sample({
   }),
   target: Notification.add,
 });
+
+sample({
+  clock: vocabularyApi.bulkUploadWordsFx.doneData,
+  source: $words,
+  fn: (words, newWords) => [...newWords, ...words],
+  target: $words,
+});

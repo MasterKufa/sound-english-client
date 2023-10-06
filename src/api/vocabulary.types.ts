@@ -1,4 +1,7 @@
-import { WordDefinition } from "../shared/vocabulary.types";
+import {
+  BulkUploadFailedRecord,
+  WordDefinition,
+} from "../shared/vocabulary.types";
 
 export type IdPayload = {
   id: number;
@@ -11,4 +14,9 @@ export type FileUploadPayload = {
 
 export type BulkWordUploadPayload = {
   words: Array<WordDefinition>;
+};
+
+export type BulkWordsProcessResponse = {
+  records: Array<WordDefinition>;
+  failedRecords: Array<BulkUploadFailedRecord>;
 };

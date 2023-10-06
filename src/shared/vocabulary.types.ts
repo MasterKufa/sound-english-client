@@ -39,3 +39,18 @@ export type WordDefinitionView = WordDefinition & {
   id: string;
   isSelected: boolean;
 };
+
+export type BulkUploadProgress = {
+  total: number;
+  handled: number;
+};
+
+export enum BulkUploadError {
+  langCheck = "langCheck",
+  duplicate = "duplicate",
+}
+
+export type BulkUploadFailedRecord = {
+  word: WordDefinition;
+  error: BulkUploadError;
+};
