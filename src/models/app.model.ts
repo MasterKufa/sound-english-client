@@ -15,7 +15,9 @@ sample({
     wordApi.saveWordFx.fail,
     wordApi.translateWordFx.fail,
     vocabularyApi.deleteWordFx.fail,
+    vocabularyApi.deleteWordsBulkFx.fail,
     vocabularyApi.bulkUploadWordsFx.fail,
+    vocabularyApi.fileUploadFx.fail,
   ],
   fn: (data): Notification.PayloadType => ({
     type: "error",
