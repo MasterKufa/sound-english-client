@@ -3,11 +3,7 @@ import { ScreenContainer } from "../../shared/styles";
 import { FILE_UPLOAD_LABEL } from "./file-upload.constants";
 import { useGate } from "effector-react";
 import { fileUploadModel } from "../../models";
-import {
-  WordBulkControls,
-  WordBulkLoading,
-  WordsBulkList,
-} from "../../modules";
+import { WordBulkControls, WordsBulkList } from "../../modules";
 
 export const FileUpload = () => {
   useGate(fileUploadModel.FileUploadGate);
@@ -17,7 +13,6 @@ export const FileUpload = () => {
       <Typography variant="h4">{FILE_UPLOAD_LABEL}</Typography>
       <WordBulkControls />
       <WordsBulkList />
-      <WordBulkLoading />
     </Box>
   );
 };

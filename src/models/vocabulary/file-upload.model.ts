@@ -13,7 +13,8 @@ import { Lang } from "../../shared/settings.types";
 import { navigation } from "../../shared/navigate";
 import { Paths } from "../../app/app.types";
 import { ACTIONS } from "../../api/actions";
-import { AppGate } from "../app.model";
+import { appModel } from "../app";
+import { setLoadingProgress } from "../app/app.model";
 
 export const FileUploadGate = createGate();
 
@@ -35,13 +36,16 @@ export const processFile = createEvent();
 export const toggleWordSelection = createEvent<string>();
 export const toggleSelectAll = createEvent();
 export const bulkUploadWords = createEvent();
-export const bulkUploadWordsProgress = createEvent<BulkUploadProgress>();
 export const closeFileUpload = createEvent();
 
 sample({
-  clock: AppGate.open,
+  clock: appModel.AppGate.open,
   target: createEffect(() =>
-    socket.client.on(ACTIONS.BULK_UPLOAD_PROGRESS, bulkUploadWordsProgress)
+    socket.client.on(
+      ACTIONS.BULK_UPLOAD_PROGRESS,
+      (progress: BulkUploadProgress) =>
+        setLoadingProgress(progress.handled / progress.total)
+    )
   ),
 });
 
@@ -108,8 +112,6 @@ sample({
       .map((word) => pick(word, Lang.en, Lang.ru)),
   target: vocabularyApi.bulkUploadWordsFx,
 });
-
-sample({ clock: bulkUploadWordsProgress, target: $bulkUploadProgress });
 
 sample({
   clock: vocabularyApi.bulkUploadWordsFx.done,

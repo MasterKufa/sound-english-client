@@ -7,7 +7,7 @@ import {
 } from "effector";
 import { createGate } from "effector-react";
 import { Lang, Settings, Voice } from "shared/settings.types";
-import { AppGate } from "../app.model";
+import { appModel } from "../app";
 import { settingsApi } from "../../api";
 import { applySettingsConstraints } from "./settings.constraints";
 import { ChangeSettingsPayload } from "./settings.types";
@@ -29,7 +29,7 @@ export const SettingsGate = createGate();
 
 // load settings
 sample({
-  clock: AppGate.open,
+  clock: appModel.AppGate.open,
   fn: () => ({ lang: Lang.en }),
   target: settingsApi.loadSettingsFx,
 });
@@ -41,7 +41,7 @@ sample({
 
 // load voices
 sample({
-  clock: AppGate.open,
+  clock: appModel.AppGate.open,
   fn: () => ({ lang: Lang.en }),
   target: settingsApi.loadVoicesFx,
 });
@@ -54,7 +54,7 @@ sample({
 });
 
 sample({
-  clock: AppGate.open,
+  clock: appModel.AppGate.open,
   fn: () => ({ lang: Lang.ru }),
   target: settingsApi.loadVoicesFx,
 });

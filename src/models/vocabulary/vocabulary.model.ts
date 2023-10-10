@@ -1,7 +1,7 @@
 import { Word } from "shared/vocabulary.types";
 import { createEffect, createEvent, createStore, sample } from "effector";
 import { vocabularyApi, wordApi } from "api";
-import { AppGate } from "models/app.model";
+import { appModel } from "../app";
 import { createGate } from "effector-react";
 import { Confirm, Notification } from "@master_kufa/client-tools";
 import { updateWord } from "./vocabulary.helpers";
@@ -22,7 +22,7 @@ export const toggleSelectedWord = createEvent<number>();
 export const VocabularyGate = createGate();
 
 sample({
-  clock: AppGate.open,
+  clock: appModel.AppGate.open,
   target: vocabularyApi.loadWordsFx,
 });
 

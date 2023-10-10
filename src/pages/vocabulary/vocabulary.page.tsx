@@ -1,13 +1,6 @@
 import { useGate, useUnit } from "effector-react";
 import { vocabularyModel } from "../../models";
-import {
-  Backdrop,
-  Box,
-  Button,
-  CircularProgress,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import { VOCABULARY_LABEL } from "./vocabulary.constants";
 import { Word } from "../../modules";
 import { ScreenContainer } from "../../shared/styles";
@@ -18,9 +11,6 @@ import { FILE_UPLOAD_LABEL } from "../file-upload/file-upload.constants";
 export const Vocabulary = () => {
   const words = useUnit(vocabularyModel.$words);
   const selectedIds = useUnit(vocabularyModel.$selectedIds);
-  const deleteWordsBulkPending = useUnit(
-    vocabularyModel.$deleteWordsBulkPending
-  );
   const actions = useUnit({
     deleteWordClicked: vocabularyModel.deleteWordsBulk,
   });
@@ -55,9 +45,6 @@ export const Vocabulary = () => {
           <Word key={word.id} word={word} />
         ))}
       </Stack>
-      <Backdrop open={deleteWordsBulkPending}>
-        <CircularProgress />
-      </Backdrop>
     </Box>
   );
 };

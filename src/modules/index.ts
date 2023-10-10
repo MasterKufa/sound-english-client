@@ -6,9 +6,5 @@ export {
   CustomAudio,
 } from "./word";
 export { Reminder } from "./reminder";
-export {
-  WordBulkUnit,
-  WordBulkControls,
-  WordsBulkList,
-  WordBulkLoading,
-} from "./word-bulk";
+export { WordBulkUnit, WordBulkControls, WordsBulkList } from "./word-bulk";
+export { Loader } from "./loader";

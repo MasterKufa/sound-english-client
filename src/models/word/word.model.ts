@@ -19,7 +19,7 @@ import {
   CONFIRM_DELETE_TITLE,
 } from "../vocabulary/vocabulary.constants";
 import { isNumber, set } from "lodash";
-import { AppGate } from "models/app.model";
+import { appModel } from "models/app";
 
 export const $word = createStore<NewWord | Word>(DEFAULT_WORD);
 
@@ -40,7 +40,7 @@ export const WordGate = createGate<number>();
 
 // AppGate open trigger after WordGate so need to handle it on first open link with word
 sample({
-  clock: [AppGate.open, WordGate.open],
+  clock: [appModel.AppGate.open, WordGate.open],
   source: WordGate.state,
   filter: (wordId) => isNumber(wordId) && Boolean(wordId),
   target: vocabularyApi.loadWordFx,

@@ -1,5 +1,5 @@
-import { useGate, useUnit } from "effector-react";
-import { Backdrop, Box, CircularProgress, Typography } from "@mui/material";
+import { useGate } from "effector-react";
+import { Box, Typography } from "@mui/material";
 import { ScreenContainer } from "../../shared/styles";
 import { wordModel } from "../../models/word";
 import { useParams } from "react-router-dom";
@@ -7,8 +7,6 @@ import { WORD_EDIT_LABEL, WORD_NEW_LABEL } from "./word.constants";
 import { WordControls, WordSpelling, WordTranslate } from "../../modules";
 
 export const Word = () => {
-  const isTranslatePending = useUnit(wordModel.$isTranslatePending);
-  const isSavePending = useUnit(wordModel.$isSavePending);
   const { id } = useParams();
   const wordId = Number(id);
   const isEdit = isFinite(wordId);
@@ -23,10 +21,6 @@ export const Word = () => {
       <WordControls />
       <WordSpelling />
       <WordTranslate />
-
-      <Backdrop open={isSavePending || isTranslatePending}>
-        <CircularProgress />
-      </Backdrop>
     </Box>
   );
 };
