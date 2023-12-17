@@ -35,7 +35,11 @@ export const Word = ({ word }: WordProps) => {
           if (!currentWord) return null;
 
           return (
-            <LangTextChip text={currentWord.text} lang={currentWord.lang} />
+            <LangTextChip
+              key={lang}
+              text={currentWord.text}
+              lang={currentWord.lang}
+            />
           );
         })}
       </Box>

@@ -22,7 +22,7 @@ export const WordBulkUnit = ({ word }: WordBulkUnitProps) => {
         {values(Lang)
           .filter((lang) => word[lang])
           .map((lang) => (
-            <LangTextChip text={word[lang] || ""} lang={lang} />
+            <LangTextChip key={lang} text={word[lang] || ""} lang={lang} />
           ))}
       </Box>
       <Checkbox

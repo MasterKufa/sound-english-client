@@ -114,7 +114,8 @@ sample({
     customAudios: fromPairs(
       entries(word.customAudios).filter(
         ([lang, audio]) =>
-          selectedLanguages.includes(lang as Lang) && audio.isModified
+          selectedLanguages.includes(lang as Lang) &&
+          (audio.isModified || audio.isDeleted)
       )
     ),
   }),

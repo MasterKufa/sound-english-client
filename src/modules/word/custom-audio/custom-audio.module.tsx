@@ -17,7 +17,7 @@ export const CustomAudio = ({ lang }: CustomAudioProps) => {
   );
   const customAudioPlaying = useUnit(wordCustomAudioModel.$customAudioPlaying);
   const { customAudios } = useUnit(wordModel.$word);
-  const hasAudio = Boolean(customAudios[lang]);
+  const hasAudio = Boolean(customAudios[lang]?.buffer);
 
   const actions = useUnit({
     customAudioRecordToggled: wordCustomAudioModel.customAudioRecordToggled,

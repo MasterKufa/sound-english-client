@@ -25,6 +25,7 @@ export type CustomAudio = {
   buffer: Blob;
   mimeType: string;
   isModified?: boolean;
+  isDeleted?: boolean;
 };
 export type CustomAudios = Partial<Record<Lang, CustomAudio>>;
 

@@ -1,5 +1,5 @@
 import { createStore, createEvent, createEffect, sample } from "effector";
-import { omit } from "lodash";
+import { fromPairs, omit, toPairs } from "lodash";
 import { Lang } from "shared/settings.types";
 import { CustomAudios } from "shared/vocabulary.types";
 import { recorder } from "./word-recording";
@@ -96,5 +96,10 @@ sample({
 // delete customAudio
 $word.on(customAudioDeleteClicked, (word, lang) => ({
   ...word,
-  customAudios: omit(word.customAudios, lang),
+  customAudios: fromPairs(
+    toPairs(word.customAudios).map(([key, audio]) => [
+      key,
+      key === lang ? { isDeleted: true } : audio,
+    ])
+  ),
 }));

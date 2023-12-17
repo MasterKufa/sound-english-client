@@ -20,7 +20,7 @@ export const WordBulkUnitError = ({ word, error }: WordBulkUnitErrorProps) => (
       {values(Lang)
         .filter((lang) => word[lang])
         .map((lang) => (
-          <LangTextChip text={word[lang] || ""} lang={lang} />
+          <LangTextChip key={lang} text={word[lang] || ""} lang={lang} />
         ))}
     </Box>
   </Box>

@@ -4,10 +4,13 @@ import { AppNavigation } from "./app.navigation";
 import { Loader } from "../modules";
 
 export const App = () => (
-  <BrowserRouter>
-    <AppNavigation />
-    <Loader />
-    <Notification.Component />
+  <>
     <Confirm.Component />
-  </BrowserRouter>
+    <Loader />
+    {/*  not move notifications to browser router, effector store initialize incorrectly */}
+    <Notification.Component />
+    <BrowserRouter>
+      <AppNavigation />
+    </BrowserRouter>
+  </>
 );
