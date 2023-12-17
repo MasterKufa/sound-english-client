@@ -1,24 +1,29 @@
-import { appApi, vocabularyApi, wordApi } from "api";
-import { createEvent, createStore, merge, sample } from "effector";
+import { appApi, settingsApi, vocabularyApi, wordApi } from "api";
+import { Store, combine, createEvent, createStore, sample } from "effector";
 import { Notification, socket } from "@master_kufa/client-tools";
 import { createGate } from "effector-react";
 
 export const $isLoading = createStore<boolean>(false);
 export const $loadingProgress = createStore<number>(NaN);
 
+const $commonPendingRequests = combine(
+  wordApi.saveWordFx.pending,
+  wordApi.translateWordFx.pending,
+  vocabularyApi.bulkUploadWordsFx.pending,
+  vocabularyApi.deleteWordFx.pending,
+  vocabularyApi.deleteWordsBulkFx.pending,
+  vocabularyApi.fileUploadFx.pending,
+  vocabularyApi.loadWordFx.pending,
+  vocabularyApi.loadWordsFx.pending,
+  settingsApi.loadVoicesFx.pending,
+  settingsApi.changeSettingsFx.pending,
+  settingsApi.loadSettingsFx.pending,
+  socket.$isConnected.map((isConnected) => !isConnected),
+  (...requests: Array<boolean>) => requests.some(Boolean)
+) as unknown as Store<boolean>;
+
 export const setIsLoading = createEvent<boolean>();
 export const setLoadingProgress = createEvent<number>();
-
-const resetLoading = merge([
-  wordApi.saveWordFx.finally,
-  wordApi.translateWordFx.finally,
-  vocabularyApi.bulkUploadWordsFx.finally,
-  vocabularyApi.deleteWordFx.finally,
-  vocabularyApi.deleteWordsBulkFx.finally,
-  vocabularyApi.fileUploadFx.finally,
-  vocabularyApi.loadWordFx.finally,
-  vocabularyApi.loadWordsFx.finally,
-]);
 
 export const AppGate = createGate();
 
@@ -38,7 +43,7 @@ sample({
   ],
   fn: (data): Notification.PayloadType => ({
     type: "error",
-    message: data.error.error || "An error occurred. Please try again later.",
+    message: data.error || "An error occurred. Please try again later.",
   }),
   target: Notification.add,
 });
@@ -53,21 +58,14 @@ sample({
   target: $loadingProgress,
 });
 
-$isLoading.reset(resetLoading);
-$loadingProgress.reset(resetLoading);
+sample({
+  clock: $commonPendingRequests,
+  target: $isLoading,
+});
 
 sample({
-  clock: [
-    wordApi.saveWordFx.pending,
-    wordApi.translateWordFx.pending,
-    vocabularyApi.bulkUploadWordsFx.pending,
-    vocabularyApi.deleteWordFx.pending,
-    vocabularyApi.deleteWordsBulkFx.pending,
-    vocabularyApi.fileUploadFx.pending,
-    vocabularyApi.loadWordFx.pending,
-    vocabularyApi.loadWordsFx.pending,
-    socket.$isConnected.map((isConnected) => !isConnected),
-  ],
-  filter: Boolean,
-  target: $isLoading,
+  clock: $commonPendingRequests,
+  filter: (commonPendingRequests) => !commonPendingRequests,
+  fn: () => NaN,
+  target: $loadingProgress,
 });

@@ -9,7 +9,6 @@ import {
   IdPayload,
   IdsPayload,
 } from "./vocabulary.types";
-import { ApiError } from "./types";
 
 export const loadWordsFx = createEffect<void, Array<Word>>(() =>
   socket.emitWithAnswer<void, Array<Word>>(ACTIONS.LOAD_WORDS)
@@ -21,13 +20,13 @@ export const loadWordFx = createEffect<number, Word>((payload) =>
   })
 );
 
-export const deleteWordFx = createEffect<number, void, ApiError>((payload) =>
+export const deleteWordFx = createEffect<number, void, string>((payload) =>
   socket.emitWithAnswer<IdPayload, void>(ACTIONS.DELETE_WORD, {
     id: payload,
   })
 );
 
-export const deleteWordsBulkFx = createEffect<Array<number>, void, ApiError>(
+export const deleteWordsBulkFx = createEffect<Array<number>, void, string>(
   (payload) =>
     socket.emitWithAnswer<IdsPayload, void>(ACTIONS.DELETE_WORDS_BULK, {
       ids: payload,
@@ -37,7 +36,7 @@ export const deleteWordsBulkFx = createEffect<Array<number>, void, ApiError>(
 export const fileUploadFx = createEffect<
   File,
   BulkWordsProcessResponse,
-  ApiError
+  string
 >((file) =>
   socket.emitWithAnswer<FileUploadPayload, BulkWordsProcessResponse>(
     ACTIONS.PROCESS_FILE,
@@ -51,7 +50,7 @@ export const fileUploadFx = createEffect<
 export const bulkUploadWordsFx = createEffect<
   Array<WordDefinition>,
   Array<Word>,
-  ApiError
+  string
 >((words) =>
   socket.emitWithAnswer<BulkWordUploadPayload, Array<Word>>(
     ACTIONS.BULK_UPLOAD_WORDS,

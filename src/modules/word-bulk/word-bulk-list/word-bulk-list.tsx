@@ -44,12 +44,20 @@ export const WordsBulkList = () => {
           <WordBulkUnit word={word} />
         ))}
       </Box>
-      <Typography variant="h5">Failed to process</Typography>
-      <Box>
-        {wordsFailed.map(({ word, error }) => (
-          <WordBulkUnitError word={word} error={error} />
-        ))}
-      </Box>
+      {Boolean(wordsFailed.length) && (
+        <>
+          <Typography variant="h5">Failed to process</Typography>
+          <Box>
+            {wordsFailed.map(({ word, error }) => (
+              <WordBulkUnitError
+                key={JSON.stringify(word)}
+                word={word}
+                error={error}
+              />
+            ))}
+          </Box>
+        </>
+      )}
     </Box>
   );
 };

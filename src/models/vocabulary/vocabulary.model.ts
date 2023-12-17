@@ -75,3 +75,12 @@ sample({
   fn: (words, newWords) => [...newWords, ...words],
   target: $words,
 });
+
+sample({
+  clock: vocabularyApi.deleteWordsBulkFx.done,
+  fn: (): Notification.PayloadType => ({
+    type: "success",
+    message: "Words successfully deleted",
+  }),
+  target: Notification.add,
+});

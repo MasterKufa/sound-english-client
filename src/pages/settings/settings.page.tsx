@@ -19,8 +19,7 @@ import { buildAllowedText, buildVoiceOptions } from "./settings.helpers";
 
 export const Settings = () => {
   const settings = useUnit(settingsModel.$settings);
-  const sourceVoices = useUnit(settingsModel.$sourceVoices);
-  const targetVoices = useUnit(settingsModel.$targetVoices);
+  const voices = useUnit(settingsModel.$voices);
 
   const actions = useUnit({ changeSettings: settingsModel.changeSettings });
 
@@ -76,13 +75,13 @@ export const Settings = () => {
           {...buildProps("sourceVoice")}
           label="Source voice"
           helperText="Voice of source language"
-          options={buildVoiceOptions(sourceVoices)}
+          options={buildVoiceOptions(voices[settings.sourceLang] || [])}
         />
         <Select
           {...buildProps("targetVoice")}
           label="Target voice"
           helperText="Voice of translation language"
-          options={buildVoiceOptions(targetVoices)}
+          options={buildVoiceOptions(voices[settings.targetLang] || [])}
         />
         <NumericInput
           {...buildProps("repeatSourceCount", true)}

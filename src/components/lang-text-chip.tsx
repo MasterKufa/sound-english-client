@@ -15,6 +15,7 @@ export type LangTextChipProps = {
 
 export const LangTextChip = ({ text, lang }: LangTextChipProps) => (
   <Chip
+    sx={{ justifyContent: "flex-start" }}
     avatar={<Avatar alt={LANG_LABELS[lang]} src={LangToIconSrc[lang]} />}
     label={text}
   />

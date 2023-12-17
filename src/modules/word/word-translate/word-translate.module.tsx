@@ -20,7 +20,7 @@ export const WordTranslate = () => {
         Translate from English
       </Button>
       {selectedLanguages.map((lang) => (
-        <CustomAudio lang={lang} />
+        <CustomAudio key={lang} lang={lang} />
       ))}
     </Box>
   );

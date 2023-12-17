@@ -12,7 +12,7 @@ export const Loader = () => {
       <CircularProgress />
       {Boolean(loadingProgress) && (
         <Typography color={"primary.light"} align="center">
-          {loadingProgress * 100}%
+          {Math.round(loadingProgress * 100)}%
           <br />
         </Typography>
       )}

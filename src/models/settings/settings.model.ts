@@ -21,8 +21,7 @@ import { values } from "lodash";
 export const $settings = createStore<Settings>(DEFAULT_SETTINGS);
 export const $settingsOnEditStarted = createStore<Settings>(DEFAULT_SETTINGS);
 
-export const $sourceVoices = createStore<Array<Voice>>([]);
-export const $targetVoices = createStore<Array<Voice>>([]);
+export const $voices = createStore<Partial<Record<Lang, Array<Voice>>>>({});
 
 export const changeSettings = createEvent<ChangeSettingsPayload>();
 
@@ -48,10 +47,11 @@ values(Lang).forEach((lang) => {
   });
 
   sample({
-    source: settingsApi.loadVoicesFx.done,
-    filter: ({ params }) => params.lang === lang,
-    fn: ({ result }) => result,
-    target: $sourceVoices,
+    clock: settingsApi.loadVoicesFx.done,
+    source: $voices,
+    filter: (_, { params }) => params.lang === lang,
+    fn: (voices, { result }) => ({ ...voices, [lang]: result }),
+    target: $voices,
   });
 });
 

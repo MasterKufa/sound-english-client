@@ -34,7 +34,7 @@ export const Reminder = ({ id }: ReminderProps) => {
       <LangTextChip text={targetWord.text} lang={targetWord.lang} />
       <IconButton
         size="small"
-        onClick={() => `${navigation.navigate(Paths.vocabulary)}/${id}`}
+        onClick={() => navigation.navigate(`${Paths.vocabulary}/${id}`)}
       >
         <OpenInNewIcon />
       </IconButton>
