@@ -3,7 +3,7 @@ import { useUnit } from "effector-react";
 import { fileUploadModel } from "models";
 import { WordBulkUnit } from "../word-bulk-unit";
 import { Container, ControlsContainer } from "./word-bulk-list.styles";
-import { WordBulkUnitError } from "components";
+import { WordBulkUnitError } from "../word-bulk-unit-error";
 
 export const WordsBulkList = () => {
   const words = useUnit(fileUploadModel.$words);

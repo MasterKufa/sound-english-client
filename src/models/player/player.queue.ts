@@ -1,7 +1,8 @@
 import { first, last, random } from "lodash";
 import { PlayerWord } from "../../shared/player.types";
-import { QueueStrategy } from "../../shared/settings.types";
+import { QueueStrategy, Settings } from "../../shared/settings.types";
 import { Word } from "shared/vocabulary.types";
+import * as wordSelectors from "../word/word.selectors";
 
 const sequenceEnqueue = (words: Array<Word>, playerQueue: Array<PlayerWord>) =>
   words[words.findIndex(({ id }) => id === last(playerQueue)?.id) + 1] ||
@@ -18,11 +19,18 @@ const queueGenerators: Record<
 };
 
 export const generateEnqueueWord = (
-  strategy: QueueStrategy = QueueStrategy.sequence,
+  settings: Settings,
   words: Array<Word>,
   playerQueue: Array<PlayerWord>
 ) => {
-  const next = queueGenerators[strategy](words, playerQueue);
+  const strategy = settings.queueStrategy || QueueStrategy.sequence;
+  const reviewedWords = words.filter(
+    (word) =>
+      wordSelectors.findUnitByLang(word.units, settings.sourceLang)?.text &&
+      wordSelectors.findUnitByLang(word.units, settings.targetLang)?.text
+  );
+
+  const next = queueGenerators[strategy](reviewedWords, playerQueue);
 
   return next;
 };

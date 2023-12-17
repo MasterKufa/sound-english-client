@@ -17,6 +17,8 @@ export type Settings = {
   repeatSourceDelay: number;
   repeatTargetDelay: number;
   isCustomAudioPreferable: boolean;
+  sourceLang: Lang;
+  targetLang: Lang;
 };
 
 export type Voice = {

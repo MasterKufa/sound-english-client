@@ -1,11 +1,15 @@
 import { useUnit } from "effector-react";
 import { vocabularyModel } from "models";
-import { Box, Checkbox, Chip, IconButton } from "@mui/material";
+import { Box, Checkbox, IconButton } from "@mui/material";
 import { Word as WordType } from "shared/vocabulary.types";
 import { Container, WordContainer } from "./word.styles";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import { Paths } from "app/app.types";
 import { navigation } from "shared/navigate";
+import { wordSelectors } from "../../../models/word";
+import { values } from "lodash";
+import { Lang } from "../../../shared/settings.types";
+import { LangTextChip } from "../../../components";
 
 type WordProps = {
   word: WordType;
@@ -25,8 +29,15 @@ export const Word = ({ word }: WordProps) => {
         <ModeEditIcon />
       </IconButton>
       <Box sx={WordContainer}>
-        <Chip label={word.sourceWord.text} />
-        <Chip label={word.targetWord.text} variant="outlined" />
+        {values(Lang).map((lang) => {
+          const currentWord = wordSelectors.findUnitByLang(word.units, lang);
+
+          if (!currentWord) return null;
+
+          return (
+            <LangTextChip text={currentWord.text} lang={currentWord.lang} />
+          );
+        })}
       </Box>
       <Checkbox
         checked={selectedIds.includes(word.id)}

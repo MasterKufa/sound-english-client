@@ -1,9 +1,11 @@
 import { useUnit } from "effector-react";
 import { fileUploadModel } from "models";
-import { Box, Checkbox, Chip } from "@mui/material";
+import { Box, Checkbox } from "@mui/material";
 import { WordDefinitionView } from "shared/vocabulary.types";
 import { Container, WordContainer } from "./word-bulk-unit.styles";
-import { Lang } from "shared/settings.types";
+import { values } from "lodash";
+import { Lang } from "../../../shared/settings.types";
+import { LangTextChip } from "../../../components";
 
 type WordBulkUnitProps = {
   word: WordDefinitionView;
@@ -17,8 +19,11 @@ export const WordBulkUnit = ({ word }: WordBulkUnitProps) => {
   return (
     <Box sx={Container}>
       <Box sx={WordContainer}>
-        <Chip label={word[Lang.en]} />
-        <Chip label={word[Lang.ru]} variant="outlined" />
+        {values(Lang)
+          .filter((lang) => word[lang])
+          .map((lang) => (
+            <LangTextChip text={word[lang] || ""} lang={lang} />
+          ))}
       </Box>
       <Checkbox
         checked={word.isSelected}

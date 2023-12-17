@@ -1,3 +1,3 @@
-export { NumericInput } from "./NumericInput";
-export { Select } from "./Select";
-export { WordBulkUnitError } from "./word-bulk-unit-error";
+export { NumericInput } from "./numeric-input";
+export { Select } from "./select";
+export { LangTextChip } from "./lang-text-chip";

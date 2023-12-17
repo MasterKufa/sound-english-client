@@ -7,6 +7,7 @@ import { wordModel } from "models";
 import { useParams } from "react-router-dom";
 
 export const WordControls = () => {
+  const isSaveDisabled = useUnit(wordModel.$isSaveDisabled);
   const actions = useUnit({
     saveClicked: wordModel.saveClicked,
     deleteWordClicked: wordModel.deleteWordClicked,
@@ -23,7 +24,11 @@ export const WordControls = () => {
       >
         Cancel
       </Button>
-      <Button variant="contained" onClick={actions.saveClicked}>
+      <Button
+        variant="contained"
+        onClick={actions.saveClicked}
+        disabled={isSaveDisabled}
+      >
         Save
       </Button>
       {isEdit && (

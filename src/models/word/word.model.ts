@@ -1,6 +1,7 @@
 import { NewWord, Word } from "shared/vocabulary.types";
 import {
   attach,
+  combine,
   createEffect,
   createEvent,
   createStore,
@@ -8,9 +9,8 @@ import {
 } from "effector";
 import { vocabularyApi, wordApi } from "api";
 import { ChangeTextPayload } from "./word.types";
-import { DEFAULT_WORD } from "./word.constants";
 import { createGate } from "effector-react";
-import { changeWordText } from "./word.helpers";
+import { changeWordText, generateDefaultWord } from "./word.helpers";
 import { Confirm, Notification } from "@master_kufa/client-tools";
 import { navigation } from "../../shared/navigate";
 import { Paths } from "../../app/app.types";
@@ -18,14 +18,29 @@ import {
   CONFIRM_DELETE_TEXT,
   CONFIRM_DELETE_TITLE,
 } from "../vocabulary/vocabulary.constants";
-import { isNumber, set } from "lodash";
+import { entries, fromPairs, isNumber, set, uniq } from "lodash";
 import { appModel } from "models/app";
+import { findUnitByLang } from "./word.selectors";
+import { Lang } from "../../shared/settings.types";
+import * as wordSelectors from "./word.selectors";
+import { settingsModel } from "../settings";
 
-export const $word = createStore<NewWord | Word>(DEFAULT_WORD);
+export const $word = createStore<NewWord | Word>(generateDefaultWord([]));
+export const $selectedLanguages = createStore<Array<Lang>>([]);
+
+export const $isSaveDisabled = combine(
+  $selectedLanguages,
+  $word,
+  (selectedLanguages, word) =>
+    selectedLanguages.length < 2 ||
+    !selectedLanguages.every((lang) =>
+      word.units.some((unit) => unit.lang === lang && unit.text)
+    )
+);
 
 export const $isTranslatePending = wordApi.translateWordFx.pending;
-export const $isSavePending = wordApi.saveWordFx.pending;
 
+export const setSelectedLanguages = createEvent<Array<Lang>>();
 export const saveClicked = createEvent();
 export const wordTextChanged = createEvent<ChangeTextPayload>();
 export const deleteWordClicked = createEvent<number>();
@@ -51,15 +66,57 @@ sample({
   target: $word,
 });
 
+sample({
+  clock: vocabularyApi.loadWordFx.doneData,
+  source: [$word, settingsModel.$settings] as const,
+  fn: ([word, settings]) =>
+    uniq([
+      settings.sourceLang,
+      settings.targetLang,
+      ...word.units.map((unit) => unit.lang),
+    ]),
+  target: $selectedLanguages,
+});
+
+$selectedLanguages.on(setSelectedLanguages, (_, langs) => langs);
+
+sample({
+  clock: $selectedLanguages,
+  source: $word,
+  fn: (word, selectedLanguages) => ({
+    ...word,
+    units: selectedLanguages.map(
+      (lang) =>
+        wordSelectors.findUnitByLang(word.units, lang) || { lang, text: "" }
+    ),
+  }),
+  target: $word,
+});
+
+sample({
+  clock: WordGate.status,
+  source: $selectedLanguages,
+  filter: (_, isOpen) => !isOpen,
+  fn: (selectedLanguages) => generateDefaultWord(selectedLanguages),
+  target: $word,
+});
+
 $word.on(wordTextChanged, changeWordText);
 
 sample({
   clock: saveClicked,
-  source: $word,
-  fn: (word) => ({
+  source: [$word, $selectedLanguages] as const,
+  fn: ([word, selectedLanguages]) => ({
     ...word,
-    sourceWord: { ...word.sourceWord, text: word.sourceWord.text.trim() },
-    targetWord: { ...word.targetWord, text: word.targetWord.text.trim() },
+    units: word.units
+      .filter((unit) => selectedLanguages.includes(unit.lang))
+      .map((unit) => ({ ...unit, text: unit.text.trim() })),
+    customAudios: fromPairs(
+      entries(word.customAudios).filter(
+        ([lang, audio]) =>
+          selectedLanguages.includes(lang as Lang) && audio.isModified
+      )
+    ),
   }),
   target: wordApi.saveWordFx,
 });
@@ -94,18 +151,11 @@ sample({
   target: backToVocabularyFx,
 });
 
-sample({
-  clock: WordGate.status,
-  filter: (isOpen) => !isOpen,
-  fn: () => DEFAULT_WORD,
-  target: $word,
-});
-
 // translate text
 sample({
   clock: translateClicked,
-  source: $word,
-  fn: (src) => src.sourceWord,
+  source: [$word, settingsModel.$settings] as const,
+  fn: ([word, settings]) => findUnitByLang(word.units, settings.sourceLang)!,
   target: wordApi.translateWordFx,
 });
 

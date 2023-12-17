@@ -16,6 +16,7 @@ import {
   SETTINGS_WORD_INVALIDATORS,
 } from "./settings.constants";
 import { invalidateWordsCache } from "../player/player.vendor";
+import { values } from "lodash";
 
 export const $settings = createStore<Settings>(DEFAULT_SETTINGS);
 export const $settingsOnEditStarted = createStore<Settings>(DEFAULT_SETTINGS);
@@ -30,7 +31,6 @@ export const SettingsGate = createGate();
 // load settings
 sample({
   clock: appModel.AppGate.open,
-  fn: () => ({ lang: Lang.en }),
   target: settingsApi.loadSettingsFx,
 });
 
@@ -40,30 +40,19 @@ sample({
 });
 
 // load voices
-sample({
-  clock: appModel.AppGate.open,
-  fn: () => ({ lang: Lang.en }),
-  target: settingsApi.loadVoicesFx,
-});
+values(Lang).forEach((lang) => {
+  sample({
+    clock: appModel.AppGate.open,
+    fn: () => ({ lang }),
+    target: settingsApi.loadVoicesFx,
+  });
 
-sample({
-  source: settingsApi.loadVoicesFx.done,
-  filter: ({ params }) => params.lang === Lang.en,
-  fn: ({ result }) => result,
-  target: $sourceVoices,
-});
-
-sample({
-  clock: appModel.AppGate.open,
-  fn: () => ({ lang: Lang.ru }),
-  target: settingsApi.loadVoicesFx,
-});
-
-sample({
-  source: settingsApi.loadVoicesFx.done,
-  filter: ({ params }) => params.lang === Lang.ru,
-  fn: ({ result }) => result,
-  target: $targetVoices,
+  sample({
+    source: settingsApi.loadVoicesFx.done,
+    filter: ({ params }) => params.lang === lang,
+    fn: ({ result }) => result,
+    target: $sourceVoices,
+  });
 });
 
 sample({

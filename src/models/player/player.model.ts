@@ -72,8 +72,8 @@ sample({
     $isPlayingTriggerEnabled,
   ] as const,
   filter: ([_, _1, _2, isPlayingTriggerEnabled]) => isPlayingTriggerEnabled,
-  fn: ([{ queueStrategy }, words, playerQueue]) =>
-    [queueStrategy, words, playerQueue] as const,
+  fn: ([settings, words, playerQueue]) =>
+    [settings, words, playerQueue] as const,
   target: fetchPlayerWordFx,
 });
 

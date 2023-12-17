@@ -7,7 +7,7 @@ import {
 } from "../../shared/vocabulary.types";
 import { vocabularyApi } from "../../api";
 import { nanoid } from "nanoid";
-import { pick } from "lodash";
+import { pick, values } from "lodash";
 import { Notification, socket } from "@master_kufa/client-tools";
 import { Lang } from "../../shared/settings.types";
 import { navigation } from "../../shared/navigate";
@@ -26,9 +26,6 @@ export const $file = createStore<File | null>(null);
 export const $selectedWordsCount = $words.map(
   (words) => words.filter((word) => word.isSelected).length
 );
-
-export const $processFilePending = vocabularyApi.fileUploadFx.pending;
-export const $bulkUploadPending = vocabularyApi.bulkUploadWordsFx.pending;
 
 export const selectFile = createEvent<File>();
 export const clearSelectedFile = createEvent();
@@ -109,7 +106,7 @@ sample({
   fn: (words) =>
     words
       .filter((word) => word.isSelected)
-      .map((word) => pick(word, Lang.en, Lang.ru)),
+      .map((word) => pick(word, ...values(Lang))),
   target: vocabularyApi.bulkUploadWordsFx,
 });
 

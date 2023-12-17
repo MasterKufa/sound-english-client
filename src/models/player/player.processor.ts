@@ -3,6 +3,7 @@ import { PlayerWord } from "shared/player.types";
 import { Word } from "../../shared/vocabulary.types";
 import { vocabularySelectors } from "../vocabulary";
 import { Settings } from "../../shared/settings.types";
+import { wordSelectors } from "../word";
 
 const STOP_EVENT_TYPE = "STOP_EVENT_TYPE";
 
@@ -22,11 +23,11 @@ export const stopAudio = () => {
   audioTrack.onended?.(new Event(STOP_EVENT_TYPE));
 };
 
-export const playAudio = ([queue, words, { delayPlayerWordToWord }]: [
-  Array<PlayerWord>,
-  Array<Word>,
-  Settings
-]) =>
+export const playAudio = ([
+  queue,
+  words,
+  { delayPlayerWordToWord, sourceLang, targetLang },
+]: [Array<PlayerWord>, Array<Word>, Settings]) =>
   new Promise<void>(async (resolve, reject) => {
     const playerWord = first(queue);
 
@@ -43,7 +44,11 @@ export const playAudio = ([queue, words, { delayPlayerWordToWord }]: [
     try {
       await audioTrack.play();
       const word = vocabularySelectors.findWordById(id)(words);
-      audioTrack.title = `${word?.sourceWord.text} - ${word?.targetWord.text}`;
+      if (word) {
+        audioTrack.title = `${
+          wordSelectors.findUnitByLang(word.units, sourceLang)?.text
+        } - ${wordSelectors.findUnitByLang(word.units, targetLang)?.text}`;
+      }
       setMediaSession("playing");
     } catch {
       reject();

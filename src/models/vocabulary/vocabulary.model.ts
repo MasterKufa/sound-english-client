@@ -14,8 +14,6 @@ import { xor } from "lodash";
 export const $words = createStore<Array<Word>>([]);
 export const $selectedIds = createStore<Array<number>>([]);
 
-export const $deleteWordsBulkPending = vocabularyApi.deleteWordsBulkFx.pending;
-
 export const deleteWordsBulk = createEvent();
 export const toggleSelectedWord = createEvent<number>();
 

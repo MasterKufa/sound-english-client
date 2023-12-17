@@ -1,4 +1,4 @@
-import { QueueStrategy, Settings } from "../../shared/settings.types";
+import { Lang, QueueStrategy, Settings } from "../../shared/settings.types";
 
 export const DEFAULT_SETTINGS: Settings = {
   queueStrategy: QueueStrategy.sequence,
@@ -15,6 +15,8 @@ export const DEFAULT_SETTINGS: Settings = {
   repeatSourceDelay: 0,
   repeatTargetDelay: 0,
   isCustomAudioPreferable: false,
+  sourceLang: Lang.en,
+  targetLang: Lang.ru,
 };
 
 export const SETTINGS_WORD_INVALIDATORS: Array<keyof Settings> = [
@@ -27,4 +29,6 @@ export const SETTINGS_WORD_INVALIDATORS: Array<keyof Settings> = [
   "repeatTargetCount",
   "repeatSourceDelay",
   "repeatTargetDelay",
+  "targetLang",
+  "sourceLang",
 ];

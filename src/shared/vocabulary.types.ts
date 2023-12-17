@@ -3,15 +3,13 @@ import { Lang } from "./settings.types";
 export type Word = {
   generatedSoundHash: string;
   createdAt: string;
-  sourceWord: WordUnit;
-  targetWord: WordUnit;
+  units: Array<WordUnit>;
   id: number;
   customAudios: CustomAudios;
 };
 
 export type NewWord = {
-  sourceWord: NewWordUnit;
-  targetWord: NewWordUnit;
+  units: Array<NewWordUnit>;
   customAudios: CustomAudios;
 };
 
@@ -30,10 +28,7 @@ export type CustomAudio = {
 };
 export type CustomAudios = Partial<Record<Lang, CustomAudio>>;
 
-export type WordDefinition = {
-  [Lang.en]: string;
-  [Lang.ru]: string;
-};
+export type WordDefinition = Partial<Record<Lang, string>>;
 
 export type WordDefinitionView = WordDefinition & {
   id: string;

@@ -1,6 +1,6 @@
 import { generateEnqueueWord } from "./player.queue";
 import { Word } from "../../shared/vocabulary.types";
-import { QueueStrategy } from "../../shared/settings.types";
+import { Settings } from "../../shared/settings.types";
 import { PlayerWord } from "../../shared/player.types";
 import { playerApi } from "../../api";
 import { IDBPDatabase, openDB } from "idb";
@@ -20,14 +20,14 @@ const initDB = async () => {
 
 initDB();
 
-export const fetchPlayerWord = ([strategy, words, playerQueue]: [
-  QueueStrategy | undefined,
+export const fetchPlayerWord = ([settings, words, playerQueue]: [
+  Settings,
   Array<Word>,
   Array<PlayerWord>
 ]): Promise<PlayerWord> =>
   new Promise(async (resolve, reject) => {
     const { id, generatedSoundHash } = generateEnqueueWord(
-      strategy,
+      settings,
       words,
       playerQueue
     );

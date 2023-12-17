@@ -7,7 +7,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { SETTINGS_LABEL } from "./settings.constants";
+import { LANG_OPTIONS, SETTINGS_LABEL } from "./settings.constants";
 import { ScreenContainer } from "../../shared/styles";
 import { NumericInput, Select } from "../../components";
 import {
@@ -37,6 +37,18 @@ export const Settings = () => {
     <Box sx={ScreenContainer}>
       <Typography variant="h4">{SETTINGS_LABEL}</Typography>
       <Stack sx={Container}>
+        <Select
+          {...buildProps("sourceLang")}
+          label="Default source language"
+          options={LANG_OPTIONS}
+          helperText="Only words that have that language unit will be played"
+        />
+        <Select
+          {...buildProps("targetLang")}
+          label="Default target language"
+          options={LANG_OPTIONS}
+          helperText="Only words that have that language unit will be played"
+        />
         <Select
           {...buildProps("queueStrategy")}
           label="Queue Strategy"

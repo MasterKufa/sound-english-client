@@ -1,8 +1,6 @@
-import { Word } from "shared/vocabulary.types";
+import { Lang } from "../../shared/settings.types";
 
-export type ChangeTextPayload<
-  T extends keyof Word = "sourceWord" | "targetWord"
-> = {
+export type ChangeTextPayload = {
   text: string;
-  targetKey: T;
+  lang: Lang;
 };

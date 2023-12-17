@@ -5,3 +5,10 @@ export const WordSpellingContainer: SxProps = {
   gridTemplateColumns: "1fr 1fr",
   gap: 1,
 };
+
+export const LangsContainer: SxProps = {
+  gridColumnStart: 1,
+  gridColumnEnd: 3,
+  mt: 1,
+  mb: 1,
+};

@@ -26,6 +26,9 @@ export const Player = () => {
       >
         {isPlaying ? "Stop" : "Play"}
       </Button>
+      <Typography variant="caption">
+        Only words with existed source and target lang spellings will be played
+      </Typography>
       {Boolean(lastPlayedRemindersSize) && (
         <>
           <Typography variant="h4">Last played</Typography>
