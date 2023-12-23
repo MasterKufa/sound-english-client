@@ -9,7 +9,7 @@ FROM nginx:alpine as nginxrunner
 
 RUN rm -rf /usr/share/nginx/html/*
 
-COPY ./static /build
+COPY ./build /build
 
 RUN  cp -r /build/* /usr/share/nginx/html/
 RUN  cp -r /build/assets /usr/share/nginx/html/assets/
