@@ -1,6 +1,7 @@
 FROM node:18.16.0-alpine as install
 
 WORKDIR /app
+RUN ls .
 COPY . /app
 RUN npm ci
 RUN npm run build
