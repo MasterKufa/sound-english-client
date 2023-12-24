@@ -1,14 +1,17 @@
-FROM node:18.16.0-alpine as install
+FROM node:18.16.0-alpine
+
+ARG REACT_APP_SERVER_HOST
+ARG REACT_APP_AUTH_HOST
+
+ENV REACT_APP_SERVER_HOST=${REACT_APP_SERVER_HOST}
+ENV REACT_APP_AUTH_HOST=${REACT_APP_AUTH_HOST}
 
 WORKDIR /app
-RUN ls .
+
 COPY . /app
 RUN npm ci
 RUN npm run build
+RUN npm i express
+RUN npm i path
 
-FROM nginx:alpine as nginxrunner
-
-COPY --from=install /app/build /build
-
-RUN rm -rf /usr/share/nginx/html/*
-RUN  cp -r /build/* /usr/share/nginx/html/
+CMD node /app/serve.prod.js
