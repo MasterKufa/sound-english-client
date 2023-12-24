@@ -7,10 +7,7 @@ CMD npm run build
 
 FROM nginx:alpine as nginxrunner
 
-WORKDIR /build
+COPY --from=install /app/build /build
+
 RUN rm -rf /usr/share/nginx/html/*
-
-COPY ./build /build
-
 RUN  cp -r /build/* /usr/share/nginx/html/
-RUN  cp -r /build/assets /usr/share/nginx/html/assets/
