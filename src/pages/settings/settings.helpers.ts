@@ -1,10 +1,10 @@
 import { settingsConstraints } from "../../models/settings";
-import { Settings, Voice } from "../../shared/settings.types";
+import { Settings } from "../../shared/settings.types";
 
-export const buildVoiceOptions = (voices: Array<Voice>) =>
+export const buildVoiceOptions = (voices: Array<string>) =>
   voices.map((voice) => ({
-    value: voice.name,
-    label: `(${voice.gender}): ${voice.name}`,
+    value: voice,
+    label: voice,
   }));
 
 export const buildAllowedText = (field: keyof Settings) =>

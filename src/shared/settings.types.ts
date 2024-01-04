@@ -21,11 +21,6 @@ export type Settings = {
   targetLang: Lang;
 };
 
-export type Voice = {
-  name: string;
-  gender: "M" | "F";
-};
-
 export type LoadVoicesPayload = {
   lang: Lang;
 };

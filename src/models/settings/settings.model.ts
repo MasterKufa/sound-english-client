@@ -6,7 +6,7 @@ import {
   sample,
 } from "effector";
 import { createGate } from "effector-react";
-import { Lang, Settings, Voice } from "shared/settings.types";
+import { Lang, Settings } from "shared/settings.types";
 import { appModel } from "../app";
 import { settingsApi } from "../../api";
 import { applySettingsConstraints } from "./settings.constraints";
@@ -21,7 +21,7 @@ import { values } from "lodash";
 export const $settings = createStore<Settings>(DEFAULT_SETTINGS);
 export const $settingsOnEditStarted = createStore<Settings>(DEFAULT_SETTINGS);
 
-export const $voices = createStore<Partial<Record<Lang, Array<Voice>>>>({});
+export const $voices = createStore<Partial<Record<Lang, Array<string>>>>({});
 
 export const changeSettings = createEvent<ChangeSettingsPayload>();
 
