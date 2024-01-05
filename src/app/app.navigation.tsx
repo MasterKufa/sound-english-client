@@ -16,6 +16,7 @@ import { Container, NavigationContainer, TabContainer } from "./app.styles";
 import { Paths } from "./app.types";
 import { Word } from "../pages/word";
 import { buildTabsValue } from "./app.helpers";
+import { UserQuickActions } from "../modules";
 
 export const AppNavigation = () => {
   useInitNavigation();
@@ -31,6 +32,7 @@ export const AppNavigation = () => {
           <Tab label={PLAYER_LABEL} value={Paths.player} />
           <Tab label={VOCABULARY_LABEL} value={Paths.vocabulary} />
           <Tab label={SETTINGS_LABEL} value={Paths.settings} />
+          <UserQuickActions />
         </Tabs>
         <Paper sx={TabContainer}>
           <Routes>
