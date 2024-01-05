@@ -41,7 +41,7 @@ export const WordsBulkList = () => {
       </Box>
       <Box>
         {words.map((word) => (
-          <WordBulkUnit word={word} />
+          <WordBulkUnit key={JSON.stringify(word)} word={word} />
         ))}
       </Box>
       {Boolean(wordsFailed.length) && (

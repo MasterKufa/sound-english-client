@@ -10,17 +10,22 @@ import {
   FileUpload,
 } from "../pages";
 import { Box, Paper, Stack, Tab, Tabs } from "@mui/material";
-import { useGate } from "effector-react";
+import { useGate, useUnit } from "effector-react";
 import { appModel } from "../models";
 import { Container, NavigationContainer, TabContainer } from "./app.styles";
 import { Paths } from "./app.types";
 import { Word } from "../pages/word";
 import { buildTabsValue } from "./app.helpers";
 import { UserQuickActions } from "../modules";
+import { socket } from "@master_kufa/client-tools";
 
 export const AppNavigation = () => {
   useInitNavigation();
   useGate(appModel.AppGate);
+
+  const isConnected = useUnit(socket.$isConnected);
+
+  if (!isConnected) return null;
 
   return (
     <Stack sx={Container}>

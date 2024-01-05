@@ -3,7 +3,7 @@ import { Store, combine, createEvent, createStore, sample } from "effector";
 import { Notification, socket } from "@master_kufa/client-tools";
 import { createGate } from "effector-react";
 
-export const $isLoading = createStore<boolean>(false);
+export const $isLoading = createStore<boolean>(true);
 export const $loadingProgress = createStore<number>(NaN);
 
 const $commonPendingRequests = combine(
