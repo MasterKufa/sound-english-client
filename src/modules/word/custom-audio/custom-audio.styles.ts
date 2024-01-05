@@ -6,6 +6,12 @@ export const Container: SxProps = {
   gap: 2,
 };
 
+export const ContainerVertical: SxProps = {
+  display: "flex",
+  flexDirection: "column",
+  gap: 2,
+};
+
 export const RecButton: SxProps = {
   flexGrow: 1,
 };

@@ -4,7 +4,12 @@ import { ScreenContainer } from "../../shared/styles";
 import { wordModel } from "../../models/word";
 import { useParams } from "react-router-dom";
 import { WORD_EDIT_LABEL, WORD_NEW_LABEL } from "./word.constants";
-import { WordControls, WordSpelling, WordTranslate } from "../../modules";
+import {
+  CustomAudio,
+  WordControls,
+  WordSpelling,
+  WordTranslate,
+} from "../../modules";
 
 export const Word = () => {
   const { id } = useParams();
@@ -20,6 +25,7 @@ export const Word = () => {
       </Typography>
       <WordControls />
       <WordSpelling />
+      <CustomAudio />
       <WordTranslate />
     </Box>
   );

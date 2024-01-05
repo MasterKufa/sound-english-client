@@ -1,27 +1,111 @@
-import { Box, Button } from "@mui/material";
+import {
+  Box,
+  Button,
+  Checkbox,
+  Chip,
+  FormControl,
+  FormControlLabel,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
 import { useUnit } from "effector-react";
-import { wordModel } from "models";
-import { CustomAudio } from "../custom-audio";
-import { WordTranslateContainer } from "./word-translate.styles";
+import { translatorModel } from "models";
+import {
+  TranslationResult,
+  WordTranslateContainer,
+  WordTranslateFields,
+} from "./word-translate.styles";
+import { LANG_LABELS } from "../../../shared/constants";
+import { values } from "lodash";
+import { Lang } from "../../../shared/settings.types";
 
 export const WordTranslate = () => {
-  const selectedLanguages = useUnit(wordModel.$selectedLanguages);
+  const isTranslateShown = useUnit(translatorModel.$isTranslateShown);
+  const translateSourceLang = useUnit(translatorModel.$translateSourceLang);
+  const translateTargetLang = useUnit(translatorModel.$translateTargetLang);
+  const translateText = useUnit(translatorModel.$translateText);
+  const translateResult = useUnit(translatorModel.$translateResult);
   const actions = useUnit({
-    translateClicked: wordModel.translateClicked,
+    translateClicked: translatorModel.translateClicked,
+    translateTextChanged: translatorModel.translateTextChanged,
+    translateShow: translatorModel.translateShow,
+    translateSourceChanged: translatorModel.translateSourceChanged,
+    translateTargetChanged: translatorModel.translateTargetChanged,
   });
 
   return (
     <Box sx={WordTranslateContainer}>
-      <Button
-        disabled={true}
-        variant="contained"
-        onClick={actions.translateClicked}
-      >
-        Translate from English
-      </Button>
-      {selectedLanguages.map((lang) => (
-        <CustomAudio key={lang} lang={lang} />
-      ))}
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={isTranslateShown}
+            onClick={() => actions.translateShow(!isTranslateShown)}
+          />
+        }
+        label="Show translator"
+      />
+
+      {isTranslateShown && (
+        <>
+          <Box sx={WordTranslateFields}>
+            <FormControl fullWidth>
+              <InputLabel id="translate-source-lang">Source</InputLabel>
+              <Select
+                labelId="translate-source-lang"
+                label="Source"
+                value={translateSourceLang}
+                onChange={({ target }) =>
+                  actions.translateSourceChanged(target.value as Lang)
+                }
+              >
+                {values(Lang).map((option) => (
+                  <MenuItem key={option} value={option}>
+                    {LANG_LABELS[option]}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl fullWidth>
+              <InputLabel id="translate-target-lang">Target</InputLabel>
+              <Select
+                labelId="translate-target-lang"
+                label="Target"
+                value={translateTargetLang}
+                onChange={({ target }) =>
+                  actions.translateTargetChanged(target.value as Lang)
+                }
+              >
+                {values(Lang).map((option) => (
+                  <MenuItem key={option} value={option}>
+                    {LANG_LABELS[option]}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+
+          <Box sx={WordTranslateFields}>
+            <TextField
+              fullWidth
+              label={LANG_LABELS[translateSourceLang]}
+              value={translateText}
+              onChange={({ target }) =>
+                actions.translateTextChanged(target.value)
+              }
+            />
+            <Chip sx={TranslationResult} label={translateResult || "-"} />
+          </Box>
+          <Button
+            disabled={!translateText}
+            variant="contained"
+            onClick={actions.translateClicked}
+          >
+            Translate
+          </Button>
+        </>
+      )}
     </Box>
   );
 };

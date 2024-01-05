@@ -1,57 +1,31 @@
-import { Box, Button, IconButton } from "@mui/material";
-import { Lang } from "../../../shared/settings.types";
+import { Box, Checkbox, FormControlLabel } from "@mui/material";
 import { useUnit } from "effector-react";
-import { wordCustomAudioModel, wordModel } from "../../../models";
-import { Container, RecButton } from "./custom-audio.styles";
-import MicIcon from "@mui/icons-material/Mic";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import ClearIcon from "@mui/icons-material/Clear";
+import { wordModel, wordCustomAudioModel } from "models";
+import { CustomAudioControl } from "./custom-audio-control";
+import { ContainerVertical } from "./custom-audio.styles";
 
-type CustomAudioProps = {
-  lang: Lang;
-};
-
-export const CustomAudio = ({ lang }: CustomAudioProps) => {
-  const customAudioRecording = useUnit(
-    wordCustomAudioModel.$customAudioRecording
-  );
-  const customAudioPlaying = useUnit(wordCustomAudioModel.$customAudioPlaying);
-  const { customAudios } = useUnit(wordModel.$word);
-  const hasAudio = Boolean(customAudios[lang]?.buffer);
-
+export const CustomAudio = () => {
+  const selectedLanguages = useUnit(wordModel.$selectedLanguages);
+  const isCustomAudioShown = useUnit(wordCustomAudioModel.$isCustomAudioShown);
   const actions = useUnit({
-    customAudioRecordToggled: wordCustomAudioModel.customAudioRecordToggled,
-    customAudioCheckToggled: wordCustomAudioModel.customAudioCheckToggled,
-    customAudioDeleteClicked: wordCustomAudioModel.customAudioDeleteClicked,
+    showCustomAudioBlock: wordCustomAudioModel.showCustomAudioBlock,
   });
 
   return (
-    <Box sx={Container}>
-      <Button
-        sx={RecButton}
-        disabled={Boolean(
-          customAudioRecording && customAudioRecording !== lang
-        )}
-        variant="contained"
-        onClick={() => actions.customAudioRecordToggled(lang)}
-      >
-        {customAudioRecording === lang
-          ? "Stop recording"
-          : `Record custom audio ${lang}`}
-      </Button>
-      <MicIcon color={customAudioRecording === lang ? "primary" : "disabled"} />
-      <IconButton
-        disabled={Boolean(customAudioPlaying || !hasAudio)}
-        onClick={() => actions.customAudioCheckToggled(lang)}
-      >
-        <PlayArrowIcon />
-      </IconButton>
-      <IconButton
-        disabled={!hasAudio}
-        onClick={() => actions.customAudioDeleteClicked(lang)}
-      >
-        <ClearIcon />
-      </IconButton>
+    <Box sx={ContainerVertical}>
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={isCustomAudioShown}
+            onClick={() => actions.showCustomAudioBlock(!isCustomAudioShown)}
+          />
+        }
+        label="Show custom audios"
+      />
+      {isCustomAudioShown &&
+        selectedLanguages.map((lang) => (
+          <CustomAudioControl key={lang} lang={lang} />
+        ))}
     </Box>
   );
 };

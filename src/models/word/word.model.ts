@@ -20,7 +20,6 @@ import {
 } from "../vocabulary/vocabulary.constants";
 import { entries, fromPairs, isNumber, set, uniq } from "lodash";
 import { appModel } from "models/app";
-import { findUnitByLang } from "./word.selectors";
 import { Lang } from "../../shared/settings.types";
 import * as wordSelectors from "./word.selectors";
 import { settingsModel } from "../settings";
@@ -38,13 +37,10 @@ export const $isSaveDisabled = combine(
     )
 );
 
-export const $isTranslatePending = wordApi.translateWordFx.pending;
-
 export const setSelectedLanguages = createEvent<Array<Lang>>();
 export const saveClicked = createEvent();
 export const wordTextChanged = createEvent<ChangeTextPayload>();
 export const deleteWordClicked = createEvent<number>();
-export const translateClicked = createEvent();
 
 export const deleteWordFx = attach({ effect: vocabularyApi.deleteWordFx });
 export const backToVocabularyFx = createEffect(() =>
@@ -67,7 +63,7 @@ sample({
 });
 
 sample({
-  clock: vocabularyApi.loadWordFx.doneData,
+  clock: [vocabularyApi.loadWordFx.doneData, settingsModel.$settings],
   source: [$word, settingsModel.$settings] as const,
   fn: ([word, settings]) =>
     uniq([
@@ -150,19 +146,4 @@ sample({
 sample({
   clock: deleteWordFx.done,
   target: backToVocabularyFx,
-});
-
-// translate text
-sample({
-  clock: translateClicked,
-  source: [$word, settingsModel.$settings] as const,
-  fn: ([word, settings]) => findUnitByLang(word.units, settings.sourceLang)!,
-  target: wordApi.translateWordFx,
-});
-
-sample({
-  clock: wordApi.translateWordFx.doneData,
-  source: $word,
-  fn: (word, res) => set(word, "targetWord.text", res.text),
-  target: $word,
 });

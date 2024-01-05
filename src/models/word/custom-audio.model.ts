@@ -1,5 +1,5 @@
 import { createStore, createEvent, createEffect, sample } from "effector";
-import { fromPairs, omit, toPairs } from "lodash";
+import { fromPairs, toPairs } from "lodash";
 import { Lang } from "shared/settings.types";
 import { CustomAudios } from "shared/vocabulary.types";
 import { recorder } from "./word-recording";
@@ -7,10 +7,12 @@ import { $word } from "./word.model";
 
 export const $customAudioRecording = createStore<Lang | null>(null);
 export const $customAudioPlaying = createStore<Lang | null>(null);
+export const $isCustomAudioShown = createStore<boolean>(false);
 
 export const customAudioRecordToggled = createEvent<Lang>();
 export const customAudioCheckToggled = createEvent<Lang>();
 export const customAudioDeleteClicked = createEvent<Lang>();
+export const showCustomAudioBlock = createEvent<boolean>();
 
 export const stopRecordCustomAudiFx = createEffect<Lang, Blob>(
   async () => await recorder.stop()
@@ -36,6 +38,11 @@ export const playCustomAudioFx = createEffect<
       audio.play();
     })
 );
+
+sample({
+  clock: showCustomAudioBlock,
+  target: $isCustomAudioShown,
+});
 
 // record custom audio
 $customAudioRecording.on(customAudioRecordToggled, (value, payload) =>

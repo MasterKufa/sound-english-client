@@ -1,8 +1,8 @@
 import { createEffect } from "effector";
 import { socket } from "@master_kufa/client-tools";
-import { NewWord, Word, NewWordUnit, WordUnit } from "shared/vocabulary.types";
+import { NewWord, Word } from "shared/vocabulary.types";
 import { ACTIONS } from "./actions";
-import { WordTranslateResponse } from "./word.types";
+import { WordTranslateRequest, WordTranslateResponse } from "./word.types";
 
 export const saveWordFx = createEffect<Word | NewWord, Word, string>(
   (payload) =>
@@ -10,11 +10,11 @@ export const saveWordFx = createEffect<Word | NewWord, Word, string>(
 );
 
 export const translateWordFx = createEffect<
-  NewWordUnit | WordUnit,
+  WordTranslateRequest,
   WordTranslateResponse,
   string
 >((payload) =>
-  socket.emitWithAnswer<NewWordUnit | WordUnit, WordTranslateResponse>(
+  socket.emitWithAnswer<WordTranslateRequest, WordTranslateResponse>(
     ACTIONS.TRANSLATE_WORD,
     payload
   )
