@@ -1,4 +1,8 @@
-export { vocabularyModel, fileUploadModel } from "./vocabulary";
+export {
+  vocabularyModel,
+  fileUploadModel,
+  vocabularyFiltersModel,
+} from "./vocabulary";
 export { settingsModel } from "./settings";
 export { playerModel } from "./player";
 export { wordCustomAudioModel, wordModel, translatorModel } from "./word";

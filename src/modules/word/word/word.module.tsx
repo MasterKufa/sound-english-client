@@ -1,5 +1,5 @@
 import { useUnit } from "effector-react";
-import { vocabularyModel } from "models";
+import { settingsModel, vocabularyModel } from "models";
 import { Box, Checkbox, IconButton } from "@mui/material";
 import { Word as WordType } from "shared/vocabulary.types";
 import { Container, WordContainer } from "./word.styles";
@@ -7,8 +7,6 @@ import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import { Paths } from "app/app.types";
 import { navigation } from "shared/navigate";
 import { wordSelectors } from "../../../models/word";
-import { values } from "lodash";
-import { Lang } from "../../../shared/settings.types";
 import { LangTextChip } from "../../../components";
 
 type WordProps = {
@@ -17,6 +15,7 @@ type WordProps = {
 
 export const Word = ({ word }: WordProps) => {
   const selectedIds = useUnit(vocabularyModel.$selectedIds);
+  const { sourceLang, targetLang } = useUnit(settingsModel.$settings);
   const actions = useUnit({
     toggleSelectedWord: vocabularyModel.toggleSelectedWord,
   });
@@ -29,19 +28,18 @@ export const Word = ({ word }: WordProps) => {
         <ModeEditIcon />
       </IconButton>
       <Box sx={WordContainer}>
-        {values(Lang).map((lang) => {
-          const currentWord = wordSelectors.findUnitByLang(word.units, lang);
-
-          if (!currentWord) return null;
-
-          return (
-            <LangTextChip
-              key={lang}
-              text={currentWord.text}
-              lang={currentWord.lang}
-            />
-          );
-        })}
+        <LangTextChip
+          text={
+            wordSelectors.findUnitByLang(word.units, sourceLang)?.text || "-"
+          }
+          lang={sourceLang}
+        />
+        <LangTextChip
+          text={
+            wordSelectors.findUnitByLang(word.units, targetLang)?.text || "-"
+          }
+          lang={targetLang}
+        />
       </Box>
       <Checkbox
         checked={selectedIds.includes(word.id)}

@@ -34,16 +34,16 @@ sample({
 
 sample({
   clock: [
-    wordApi.saveWordFx.fail,
-    wordApi.translateWordFx.fail,
-    vocabularyApi.deleteWordFx.fail,
-    vocabularyApi.deleteWordsBulkFx.fail,
-    vocabularyApi.bulkUploadWordsFx.fail,
-    vocabularyApi.fileUploadFx.fail,
+    wordApi.saveWordFx.failData,
+    wordApi.translateWordFx.failData,
+    vocabularyApi.deleteWordFx.failData,
+    vocabularyApi.deleteWordsBulkFx.failData,
+    vocabularyApi.bulkUploadWordsFx.failData,
+    vocabularyApi.fileUploadFx.failData,
   ],
-  fn: (data): Notification.PayloadType => ({
+  fn: (error?: string): Notification.PayloadType => ({
     type: "error",
-    message: data.error || "An error occurred. Please try again later.",
+    message: error || "An error occurred. Please try again later.",
   }),
   target: Notification.add,
 });

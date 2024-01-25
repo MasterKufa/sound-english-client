@@ -16,6 +16,7 @@ export const NumericInput = <T extends string>({
   helperText,
 }: NumericInputProps<T>) => (
   <TextField
+    name="numeric"
     label={label}
     variant="outlined"
     value={value}

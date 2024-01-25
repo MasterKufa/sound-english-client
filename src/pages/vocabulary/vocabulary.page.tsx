@@ -1,18 +1,18 @@
 import { useGate, useUnit } from "effector-react";
-import { vocabularyModel } from "../../models";
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { vocabularyFiltersModel, vocabularyModel } from "../../models";
+import { Box, Pagination, Stack, Typography } from "@mui/material";
 import { VOCABULARY_LABEL } from "./vocabulary.constants";
-import { Word } from "../../modules";
+import { VocabularyControls, VocabularyFilters, Word } from "../../modules";
 import { ScreenContainer } from "../../shared/styles";
-import { Paths } from "../../app/app.types";
-import { navigation } from "../../shared/navigate";
-import { FILE_UPLOAD_LABEL } from "../file-upload/file-upload.constants";
+import { PaginationContainer } from "./vocabulary.styles";
 
 export const Vocabulary = () => {
-  const words = useUnit(vocabularyModel.$words);
-  const selectedIds = useUnit(vocabularyModel.$selectedIds);
+  const pageNumber = useUnit(vocabularyFiltersModel.$pageNumber);
+  const totalPages = useUnit(vocabularyFiltersModel.$totalPages);
+  const filteredWords = useUnit(vocabularyFiltersModel.$filteredWords);
+
   const actions = useUnit({
-    deleteWordClicked: vocabularyModel.deleteWordsBulk,
+    changePageNumber: vocabularyFiltersModel.changePageNumber,
   });
 
   useGate(vocabularyModel.VocabularyGate);
@@ -20,31 +20,27 @@ export const Vocabulary = () => {
   return (
     <Box sx={ScreenContainer}>
       <Typography variant="h4">{VOCABULARY_LABEL}</Typography>
-      <Button
-        variant="contained"
-        onClick={() => navigation.navigate(Paths.vocabulary + `/new`)}
-      >
-        Add word
-      </Button>
-      <Button
-        variant="contained"
-        onClick={() => navigation.navigate(Paths.fileUpload)}
-      >
-        {FILE_UPLOAD_LABEL}
-      </Button>
-      <Button
-        variant="contained"
-        onClick={actions.deleteWordClicked}
-        disabled={!selectedIds.length}
-      >
-        Delete selected{" "}
-        {Boolean(selectedIds.length) && `(${selectedIds.length})`}
-      </Button>
+      <VocabularyControls />
+      <VocabularyFilters />
       <Stack>
-        {words.map((word) => (
+        {filteredWords.map((word) => (
           <Word key={word.id} word={word} />
         ))}
       </Stack>
+      {!Boolean(filteredWords.length) && (
+        <Typography textAlign="center" variant="caption">
+          No words found
+        </Typography>
+      )}
+      {Boolean(filteredWords.length) && (
+        <Pagination
+          onChange={(_, pageNumber) => actions.changePageNumber(pageNumber)}
+          sx={PaginationContainer}
+          page={pageNumber}
+          count={totalPages}
+          variant="outlined"
+        />
+      )}
     </Box>
   );
 };

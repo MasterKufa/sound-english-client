@@ -88,6 +88,7 @@ export const WordTranslate = () => {
 
           <Box sx={WordTranslateFields}>
             <TextField
+              name="translate"
               fullWidth
               label={LANG_LABELS[translateSourceLang]}
               value={translateText}

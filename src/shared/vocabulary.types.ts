@@ -3,6 +3,7 @@ import { Lang } from "./settings.types";
 export type Word = {
   generatedSoundHash: string;
   createdAt: string;
+  updatedAt: string;
   units: Array<WordUnit>;
   id: number;
   customAudios: CustomAudios;
@@ -50,3 +51,9 @@ export type BulkUploadFailedRecord = {
   word: WordDefinition;
   error: BulkUploadError;
 };
+
+export enum VocabularyFilter {
+  alphabet = "alphabet",
+  creationDate = "creationDate",
+  updateDate = "updateDate",
+}

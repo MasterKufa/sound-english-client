@@ -5,10 +5,10 @@ import { Loader } from "../modules";
 
 export const App = () => (
   <>
+    {/*  not move notifications to browser router, effector store initialize incorrectly, should be at top */}
+    <Notification.Component />
     <Confirm.Component />
     <Loader />
-    {/*  not move notifications to browser router, effector store initialize incorrectly */}
-    <Notification.Component />
     <BrowserRouter>
       <AppNavigation />
     </BrowserRouter>
