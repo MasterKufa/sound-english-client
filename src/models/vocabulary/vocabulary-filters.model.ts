@@ -28,8 +28,7 @@ export const $filteredWords = combine(
   $order,
   $alphabetLang,
   settingsModel.$settings,
-  $pageNumber,
-  (words, filterText, filter, order, alphabetLang, settings, pageNumber) =>
+  (words, filterText, filter, order, alphabetLang, settings) =>
     words
       .filter(
         (word) =>
@@ -56,7 +55,16 @@ export const $filteredWords = combine(
 
         return res * (order === "asc" ? 1 : -1);
       })
-      .slice((pageNumber - 1) * PAGE_SIZE, pageNumber * PAGE_SIZE - 1)
+);
+
+export const $shownWords = combine(
+  $filteredWords,
+  $pageNumber,
+  (filteredWords, pageNumber) =>
+    filteredWords.slice(
+      (pageNumber - 1) * PAGE_SIZE,
+      pageNumber * PAGE_SIZE - 1
+    )
 );
 
 export const $totalPages = $filteredWords.map((words) =>

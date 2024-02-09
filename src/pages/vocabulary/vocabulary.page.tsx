@@ -15,7 +15,7 @@ import { playlistsModel } from "models/playlists";
 export const Vocabulary = () => {
   const pageNumber = useUnit(vocabularyFiltersModel.$pageNumber);
   const totalPages = useUnit(vocabularyFiltersModel.$totalPages);
-  const filteredWords = useUnit(vocabularyFiltersModel.$filteredWords);
+  const shownWords = useUnit(vocabularyFiltersModel.$shownWords);
   const selectedIds = useUnit(vocabularyModel.$selectedIds);
 
   const isPlaylistsManagementVisible = useUnit(
@@ -36,7 +36,7 @@ export const Vocabulary = () => {
       {isPlaylistsManagementVisible && <PlaylistsControls />}
       <VocabularyFilters />
       <Stack>
-        {filteredWords.map((word) => (
+        {shownWords.map((word) => (
           <Word
             key={word.id}
             word={word}
@@ -46,12 +46,12 @@ export const Vocabulary = () => {
           />
         ))}
       </Stack>
-      {!Boolean(filteredWords.length) && (
+      {!Boolean(shownWords.length) && (
         <Typography textAlign="center" variant="caption">
           No words found
         </Typography>
       )}
-      {Boolean(filteredWords.length) && (
+      {Boolean(shownWords.length) && (
         <Pagination
           onChange={(_, pageNumber) => actions.changePageNumber(pageNumber)}
           sx={PaginationContainer}

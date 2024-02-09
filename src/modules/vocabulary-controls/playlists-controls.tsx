@@ -42,7 +42,7 @@ export const PlaylistsControls = () => {
         Add playlist
       </Button>
       {playlists.map((playlist) => (
-        <Accordion>
+        <Accordion key={playlist.id}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <TextField
               sx={{ mr: 1 }}
