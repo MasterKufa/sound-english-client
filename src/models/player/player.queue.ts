@@ -3,6 +3,8 @@ import { PlayerWord } from "../../shared/player.types";
 import { QueueStrategy, Settings } from "../../shared/settings.types";
 import { Word } from "shared/vocabulary.types";
 import * as wordSelectors from "../word/word.selectors";
+import { Playlist } from "shared/playlists";
+import { CurrentPlaylist } from "./player.types";
 
 const sequenceEnqueue = (words: Array<Word>, playerQueue: Array<PlayerWord>) =>
   words[words.findIndex(({ id }) => id === last(playerQueue)?.id) + 1] ||
@@ -21,16 +23,25 @@ const queueGenerators: Record<
 export const generateEnqueueWord = (
   settings: Settings,
   words: Array<Word>,
+  playlists: Array<Playlist>,
+  currentPlaylistId: CurrentPlaylist,
   playerQueue: Array<PlayerWord>
 ) => {
   const strategy = settings.queueStrategy || QueueStrategy.sequence;
+  const playlistWordIds = playlists.find(
+    (list) => list.id === currentPlaylistId
+  )?.wordIds;
+
   const reviewedWords = words.filter(
     (word) =>
+      (currentPlaylistId !== "All"
+        ? playlistWordIds?.includes(word.id)
+        : true) &&
       wordSelectors.findUnitByLang(word.units, settings.sourceLang)?.text &&
       wordSelectors.findUnitByLang(word.units, settings.targetLang)?.text
   );
 
-  const next = queueGenerators[strategy](reviewedWords, playerQueue);
+  const next = queueGenerators[strategy](reviewedWords, playerQueue) || {};
 
   return next;
 };

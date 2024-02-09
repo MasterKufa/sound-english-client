@@ -28,11 +28,12 @@ export const CustomAudioControl = ({ lang }: CustomAudioControlProps) => {
   return (
     <Box sx={Container}>
       <Button
+        size="small"
         sx={RecButton}
         disabled={Boolean(
           customAudioRecording && customAudioRecording !== lang
         )}
-        variant="contained"
+        variant="outlined"
         onClick={() => actions.customAudioRecordToggled(lang)}
       >
         {customAudioRecording === lang

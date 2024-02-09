@@ -52,6 +52,7 @@ export const VocabularyFilters = () => {
   return (
     <Box sx={Container}>
       <TextField
+        size="small"
         name="Search"
         fullWidth
         label="Search"

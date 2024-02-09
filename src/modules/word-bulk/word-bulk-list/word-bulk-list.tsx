@@ -23,11 +23,11 @@ export const WordsBulkList = () => {
         <Button
           disabled={!selectedWordsCount}
           onClick={actions.bulkUploadWords}
-          variant="contained"
+          variant="outlined"
         >
           Upload words
         </Button>
-        <Button onClick={actions.toggleSelectAll} variant="contained">
+        <Button onClick={actions.toggleSelectAll} variant="outlined">
           Toggle all
         </Button>
       </Box>

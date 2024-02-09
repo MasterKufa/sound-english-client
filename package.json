@@ -8,12 +8,13 @@
     "@master_kufa/client-tools": "^0.22.37",
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.13.4",
-    "effector": "^22.8.6",
-    "effector-react": "^22.5.3",
+    "effector": "^22.8.8",
+    "effector-react": "^22.5.4",
     "idb": "^7.1.1",
     "jwt-decode": "^4.0.0",
     "lodash": "^4.17.21",
     "nanoid": "^4.0.2",
+    "patronum": "^1.20.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.12.1",
@@ -50,7 +51,6 @@
     "@types/node": "^20.3.1",
     "@types/react": "^18.2.12",
     "@types/react-dom": "^18.2.5",
-    "@types/react-router-dom": "^5.3.3",
-    "effector-logger": "^0.14.0"
+    "@types/react-router-dom": "^5.3.3"
   }
 }

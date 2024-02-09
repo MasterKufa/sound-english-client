@@ -17,8 +17,11 @@ import { fetchPlayerWord } from "./player.vendor";
 import { Notification } from "@master_kufa/client-tools";
 import { Word } from "../../shared/vocabulary.types";
 import { Settings } from "../../shared/settings.types";
+import { playlistsModel } from "models/playlists";
+import { CurrentPlaylist } from "./player.types";
 
 export const $isPlaying = createStore<boolean>(false);
+export const $currentPlaylistId = createStore<CurrentPlaylist>("All");
 export const $playerQueue = createStore<Array<PlayerWord>>([]);
 export const $lastPlayedReminders = createStore<Array<number>>([]);
 
@@ -30,6 +33,7 @@ export const PlayerGate = createGate();
 
 export const triggerPlay = createEvent();
 export const enqueuePlayerWord = createEvent();
+export const selectPlaylist = createEvent<CurrentPlaylist>();
 
 const playWordFx = attach({
   effect: createEffect<[Array<PlayerWord>, Array<Word>, Settings], void>(
@@ -68,12 +72,15 @@ sample({
   source: [
     settingsModel.$settings,
     vocabularyModel.$words,
+    playlistsModel.$playlists,
+    $currentPlaylistId,
     $playerQueue,
     $isPlayingTriggerEnabled,
   ] as const,
-  filter: ([_, _1, _2, isPlayingTriggerEnabled]) => isPlayingTriggerEnabled,
-  fn: ([settings, words, playerQueue]) =>
-    [settings, words, playerQueue] as const,
+  filter: ([_, _1, _2, _3, _4, isPlayingTriggerEnabled]) =>
+    isPlayingTriggerEnabled,
+  fn: ([settings, words, playlists, currentPlaylistId, playerQueue]) =>
+    [settings, words, playlists, currentPlaylistId, playerQueue] as const,
   target: fetchPlayerWordFx,
 });
 
@@ -147,3 +154,8 @@ sample({
 });
 
 handleAudioControls(triggerPlay);
+
+sample({ clock: selectPlaylist, target: $currentPlaylistId });
+
+$playerQueue.reset(selectPlaylist);
+$playerQueue.reset(PlayerGate.close);

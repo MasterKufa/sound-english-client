@@ -4,7 +4,6 @@ export const Container: SxProps = {
   display: "flex",
   flexDirection: "column",
   gap: 1,
-  mt: 2,
 };
 
 export const ContainerButtons: SxProps = {

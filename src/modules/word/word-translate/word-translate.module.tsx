@@ -40,6 +40,7 @@ export const WordTranslate = () => {
       <FormControlLabel
         control={
           <Checkbox
+            size="small"
             checked={isTranslateShown}
             onClick={() => actions.translateShow(!isTranslateShown)}
           />
@@ -51,8 +52,11 @@ export const WordTranslate = () => {
         <>
           <Box sx={WordTranslateFields}>
             <FormControl fullWidth>
-              <InputLabel id="translate-source-lang">Source</InputLabel>
+              <InputLabel size="small" id="translate-source-lang">
+                Source
+              </InputLabel>
               <Select
+                size="small"
                 labelId="translate-source-lang"
                 label="Source"
                 value={translateSourceLang}
@@ -68,8 +72,11 @@ export const WordTranslate = () => {
               </Select>
             </FormControl>
             <FormControl fullWidth>
-              <InputLabel id="translate-target-lang">Target</InputLabel>
+              <InputLabel size="small" id="translate-target-lang">
+                Target
+              </InputLabel>
               <Select
+                size="small"
                 labelId="translate-target-lang"
                 label="Target"
                 value={translateTargetLang}
@@ -88,6 +95,7 @@ export const WordTranslate = () => {
 
           <Box sx={WordTranslateFields}>
             <TextField
+              size="small"
               name="translate"
               fullWidth
               label={LANG_LABELS[translateSourceLang]}
@@ -99,8 +107,9 @@ export const WordTranslate = () => {
             <Chip sx={TranslationResult} label={translateResult || "-"} />
           </Box>
           <Button
+            size="small"
             disabled={!translateText}
-            variant="contained"
+            variant="outlined"
             onClick={actions.translateClicked}
           >
             Translate

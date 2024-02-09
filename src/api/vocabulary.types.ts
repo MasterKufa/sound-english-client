@@ -3,14 +3,6 @@ import {
   WordDefinition,
 } from "../shared/vocabulary.types";
 
-export type IdPayload = {
-  id: number;
-};
-
-export type IdsPayload = {
-  ids: Array<number>;
-};
-
 export type FileUploadPayload = {
   file: File;
   name: string;

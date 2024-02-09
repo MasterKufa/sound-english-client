@@ -9,7 +9,6 @@ export const Container: SxProps = {
 export const ContainerVertical: SxProps = {
   display: "flex",
   flexDirection: "column",
-  gap: 2,
 };
 
 export const RecButton: SxProps = {

@@ -18,17 +18,19 @@ export const WordControls = () => {
   return (
     <Box sx={WordControlsContainer}>
       <Button
-        variant="contained"
+        size="small"
+        variant="outlined"
         onClick={() => navigation.navigate(Paths.vocabulary)}
       >
         Cancel
       </Button>
-      <Button variant="contained" onClick={actions.saveClicked}>
+      <Button size="small" variant="outlined" onClick={actions.saveClicked}>
         Save
       </Button>
       {isEdit && (
         <Button
-          variant="contained"
+          size="small"
+          variant="outlined"
           onClick={() => actions.deleteWordClicked(wordId)}
         >
           Delete

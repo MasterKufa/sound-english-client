@@ -16,6 +16,7 @@ export const CustomAudio = () => {
       <FormControlLabel
         control={
           <Checkbox
+            size="small"
             checked={isCustomAudioShown}
             onClick={() => actions.showCustomAudioBlock(!isCustomAudioShown)}
           />

@@ -15,3 +15,5 @@ export interface VocabularyDb extends DBSchema {
     };
   };
 }
+
+export type CurrentPlaylist = number | string | "All";

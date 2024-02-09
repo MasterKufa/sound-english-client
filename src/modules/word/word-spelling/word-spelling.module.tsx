@@ -18,6 +18,7 @@ export const WordSpelling = () => {
   return (
     <Box sx={WordSpellingContainer}>
       <TextField
+        size="small"
         name="source"
         label={LANG_LABELS[sourceLang]}
         value={sourceUnit?.text || ""}
@@ -30,6 +31,7 @@ export const WordSpelling = () => {
       />
       <TextField
         name="target"
+        size="small"
         label={LANG_LABELS[targetLang]}
         value={targetUnit?.text || ""}
         onChange={({ target }) =>

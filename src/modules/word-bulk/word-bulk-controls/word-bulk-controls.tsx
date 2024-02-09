@@ -22,7 +22,7 @@ export const WordBulkControls = () => {
     <Box sx={WordBulkControlsContainer}>
       <Button
         component="label"
-        variant="contained"
+        variant="outlined"
         startIcon={<CloudUploadIcon />}
       >
         Click to Upload File
@@ -45,10 +45,10 @@ export const WordBulkControls = () => {
       {file && (
         <Box sx={UploadedControlsContainer}>
           <Typography variant="body1">{file.name} was selected.</Typography>
-          <Button variant="contained" onClick={actions.clearSelectedFile}>
+          <Button variant="outlined" onClick={actions.clearSelectedFile}>
             Clear selected file
           </Button>
-          <Button variant="contained" onClick={actions.processFile}>
+          <Button variant="outlined" onClick={actions.processFile}>
             Process file
           </Button>
         </Box>

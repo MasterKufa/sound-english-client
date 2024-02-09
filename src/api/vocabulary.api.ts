@@ -6,9 +6,8 @@ import {
   BulkWordUploadPayload,
   BulkWordsProcessResponse,
   FileUploadPayload,
-  IdPayload,
-  IdsPayload,
 } from "./vocabulary.types";
+import { IdPayload, IdsPayload } from "shared/types";
 
 export const loadWordsFx = createEffect<void, Array<Word>>(() =>
   socket.emitWithAnswer<void, Array<Word>>(ACTIONS.LOAD_WORDS)
