@@ -2,6 +2,7 @@ import { Avatar, Chip } from "@mui/material";
 import { Lang } from "../shared/settings.types";
 import { EnFlagSrc, RuFlagSrc } from "../shared/icons";
 import { LANG_LABELS } from "../shared/constants";
+import { OverflowTip } from "shared/overflow-tooltip";
 
 const LangToIconSrc: Record<Lang, string> = {
   [Lang.en]: EnFlagSrc,
@@ -17,6 +18,6 @@ export const LangTextChip = ({ text, lang }: LangTextChipProps) => (
   <Chip
     sx={{ justifyContent: "flex-start" }}
     avatar={<Avatar alt={LANG_LABELS[lang]} src={LangToIconSrc[lang]} />}
-    label={text}
+    label={<OverflowTip>{text}</OverflowTip>}
   />
 );

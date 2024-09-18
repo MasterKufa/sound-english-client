@@ -8,7 +8,8 @@ export const Container: SxProps = {
 
 export const WordContainer: SxProps = {
   display: "grid",
-  gridTemplateColumns: "1fr 1fr",
+  gridTemplateColumns: `repeat(2, calc())`,
+  overflow: "hidden",
   flexGrow: 1,
   gap: 1,
   paddingTop: 1,
